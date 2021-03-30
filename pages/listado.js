@@ -4,9 +4,6 @@ import { grey, lightBlue, red, blue, green, deepPurple, yellow } from '@material
 
 const useStyles = makeStyles(theme => ({
 	// List
-	container: {
-		background: grey[300],
-	},
 	list: {
 		display: 'flex',
 		flexDirection: 'row',
