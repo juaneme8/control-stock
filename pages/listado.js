@@ -1,9 +1,13 @@
-import { Avatar, Box, Card, CardContent, CardHeader, Container, makeStyles, TextField, Typography } from '@material-ui/core';
-import React from 'react';
+import { Avatar, Box, Button, Card, CardContent, CardHeader, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import { grey, lightBlue, red, blue, green, deepPurple, yellow } from '@material-ui/core/colors';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
 	// List
+	container: {
+		marginTop: theme.spacing(2),
+	},
 	list: {
 		display: 'flex',
 		flexDirection: 'row',
@@ -52,38 +56,79 @@ const useStyles = makeStyles(theme => ({
 
 function List() {
 	const classes = useStyles();
+	const [devices, setDevices] = useState([]);
+	const [searchInput, setSearchInput] = useState('');
+	const [refresh, setRefresh] = useState(true);
+	useEffect(() => {
+		const fetchDevices = async () => {
+			console.log('fetchDevices');
+			const res = await axios.get(`http://localhost:3000/api/devices/`);
+			const { data } = res;
+			if (data.success) {
+				console.log(data.data);
+				setDevices(data.data);
+			}
+			setRefresh(false);
+		};
 
-	const handleSearch = e => {
+		if (refresh) fetchDevices();
+	}, [refresh]);
+
+	const handleInputChange = e => {
 		const {
 			target: { value: inputValue },
 		} = e;
 
-		console.log(inputValue);
+		setSearchInput(inputValue);
+	};
+
+	const handleSubmit = async e => {
+		e.preventDefault();
+
+		const lineLetters = ['A', 'B', 'C', 'D', 'E', 'H', 'P'];
+
+		console.log('handleSubmit');
+
+		console.log(lineLetters[searchInput[0] - 1]);
+
+		const res = await axios.post(`http://localhost:3000/api/devices/`, {
+			name: searchInput.slice(1),
+			line: lineLetters[searchInput[0] - 1],
+		});
+
+		setRefresh(true);
+
+		//setDevices([...devices, { line: 'D', name: e.target.value }]);
 	};
 
 	return (
-		<Container className={classes.container}>
-			<TextField placeholder='Buscar' fullWidth onChange={handleSearch} />
+		<Container maxWidth='md' className={classes.container}>
+			<form onSubmit={handleSubmit}>
+				<Grid container>
+					<Grid item xs={11}>
+						<TextField value={searchInput} placeholder='Buscar' onChange={handleInputChange} fullWidth />
+					</Grid>
+					<Grid item xs={1}>
+						<Button type='submit' variant='contained' color='primary' size='small' fullWidth>
+							AGREGAR
+						</Button>
+					</Grid>
+				</Grid>
+			</form>
 			<Typography variant='h5' color='textSecondary'>
 				Listado de Equipos
 			</Typography>
 			<Box className={classes.list}>
-				<Device line='A' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
-				<Device line='B' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
-				<Device line='C' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
-				<Device line='D' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
-				<Device line='E' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
-				<Device line='H' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
-				<Device line='P' title='Equipo A' barCode='AAA' date='AA/AA/AAAA' />
+				{devices.map(device => (
+					<Device key={device._id} line={device.line} title={device.name} />
+				))}
 			</Box>
 		</Container>
 	);
 }
 
-const Device = props => {
-	const classes = useStyles(props);
-
-	const { line, title, barCode, date } = props;
+const Device = ({ line, title }) => {
+	const classes = useStyles();
 
 	return (
 		<Card className={classes.root}>
@@ -95,12 +140,12 @@ const Device = props => {
 					</Avatar>
 				}
 				title={title}
-				subheader={barCode}
+				subheader='barcode'
 			/>
 
 			<CardContent className={classes.cardContent}>
 				<Typography variant='caption' color='textSecondary'>
-					{date}
+					dd/MM/yy
 				</Typography>
 			</CardContent>
 		</Card>
