@@ -59,6 +59,7 @@ function List() {
 	const [devices, setDevices] = useState([]);
 	const [searchInput, setSearchInput] = useState('');
 	const [refresh, setRefresh] = useState(true);
+
 	useEffect(() => {
 		const fetchDevices = async () => {
 			console.log('fetchDevices');
@@ -106,7 +107,7 @@ function List() {
 			<form onSubmit={handleSubmit}>
 				<Grid container>
 					<Grid item xs={11}>
-						<TextField value={searchInput} placeholder='Buscar' onChange={handleInputChange} fullWidth />
+						<TextField value={searchInput} placeholder='Agregar Equipo' onChange={handleInputChange} fullWidth />
 					</Grid>
 					<Grid item xs={1}>
 						<Button type='submit' variant='contained' color='primary' size='small' fullWidth>
