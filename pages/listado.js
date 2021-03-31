@@ -41,7 +41,6 @@ function List() {
 	const classes = useStyles();
 	const [devices, setDevices] = useState([]);
 	const [searchInput, setSearchInput] = useState('');
-	const [refresh, setRefresh] = useState(true);
 
 	useEffect(() => {
 		const fetchDevices = async () => {
@@ -49,14 +48,13 @@ function List() {
 			const res = await axios.get(`http://localhost:3000/api/devices/`);
 			const { data } = res;
 			if (data.success) {
-				console.log(data.data);
+				console.table(data.data);
 				setDevices(data.data);
 			}
-			setRefresh(false);
 		};
 
-		if (refresh) fetchDevices();
-	}, [refresh]);
+		fetchDevices();
+	}, []);
 
 	const handleInputChange = e => {
 		const {
@@ -69,20 +67,22 @@ function List() {
 	const handleSubmit = async e => {
 		e.preventDefault();
 
-		const lineLetters = ['A', 'B', 'C', 'D', 'E', 'H', 'P'];
-
-		console.log('handleSubmit');
-
-		console.log(lineLetters[searchInput[0] - 1]);
-
+		// Actualizo el valor de la DB
 		const res = await axios.post(`http://localhost:3000/api/devices/`, {
 			name: searchInput.slice(1),
-			line: lineLetters[searchInput[0] - 1],
+			line: searchInput[0],
 		});
 
-		setRefresh(true);
+		const {
+			data: {
+				data: { _id },
+			},
+		} = res;
 
-		//setDevices([...devices, { line: 'D', name: e.target.value }]);
+		// console.log(res);
+
+		// Actualizo la variable de estado
+		setDevices([...devices, { _id: _id, name: searchInput.slice(1), line: searchInput[0] }]);
 	};
 
 	return (
