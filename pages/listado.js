@@ -8,20 +8,11 @@ const useStyles = makeStyles(theme => ({
 	container: {
 		marginTop: theme.spacing(2),
 	},
-	list: {
-		display: 'flex',
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-	},
 
 	// Device
 	root: {
-		width: 180,
 		margin: theme.spacing(1),
 		background: grey[100],
-	},
-	cardHeader: {
-		padding: theme.spacing(1, 1, 0, 1),
 	},
 	badgeA: {
 		background: lightBlue[900],
@@ -43,14 +34,6 @@ const useStyles = makeStyles(theme => ({
 	},
 	badgeP: {
 		background: yellow[900],
-	},
-	cardContent: {
-		display: 'flex',
-		justifyContent: 'center',
-		padding: 0,
-		'&:last-child': {
-			paddingBottom: 0,
-		},
 	},
 }));
 
@@ -119,18 +102,20 @@ function List() {
 			<Typography variant='h5' color='textSecondary'>
 				Listado de Equipos
 			</Typography>
-			<Box className={classes.list}>
+			<Grid container>
 				{devices.map(device => (
-					<Device key={device._id} line={device.line} title={device.name} />
+					<Grid item key={device._id} xs={6} sm={4} md={3}>
+						<Device device={device} />
+					</Grid>
 				))}
-			</Box>
+			</Grid>
 		</Container>
 	);
 }
 
-const Device = ({ line, title }) => {
+const Device = ({ device }) => {
 	const classes = useStyles();
-
+	const { line, name } = device;
 	return (
 		<Card className={classes.root}>
 			<CardHeader
@@ -140,15 +125,9 @@ const Device = ({ line, title }) => {
 						{line}
 					</Avatar>
 				}
-				title={title}
+				title={name}
 				subheader='barcode'
 			/>
-
-			<CardContent className={classes.cardContent}>
-				<Typography variant='caption' color='textSecondary'>
-					dd/MM/yy
-				</Typography>
-			</CardContent>
 		</Card>
 	);
 };
