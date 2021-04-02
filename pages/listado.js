@@ -14,26 +14,30 @@ const useStyles = makeStyles(theme => ({
 		margin: theme.spacing(1),
 		background: grey[100],
 	},
-	badgeA: {
-		background: lightBlue[900],
-	},
-	badgeB: {
-		background: red[900],
-	},
-	badgeC: {
-		background: blue[900],
-	},
-	badgeD: {
-		background: green[500],
-	},
-	badgeE: {
-		background: deepPurple[500],
-	},
-	badgeH: {
-		background: yellow[500],
-	},
-	badgeP: {
-		background: yellow[900],
+	badge: {
+		backgroundColor: device => {
+			if (device.line === 'A') {
+				return lightBlue[900];
+			}
+			if (device.line === 'B') {
+				return red[900];
+			}
+			if (device.line === 'C') {
+				return blue[900];
+			}
+			if (device.line === 'D') {
+				return green[500];
+			}
+			if (device.line === 'E') {
+				return deepPurple[500];
+			}
+			if (device.line === 'H') {
+				return yellow[500];
+			}
+			if (device.line === 'P') {
+				return yellow[900];
+			}
+		},
 	},
 }));
 
@@ -114,14 +118,14 @@ function List() {
 }
 
 const Device = ({ device }) => {
-	const classes = useStyles();
+	const classes = useStyles(device);
 	const { line, name } = device;
 	return (
 		<Card className={classes.root}>
 			<CardHeader
 				className={classes.cardHeader}
 				avatar={
-					<Avatar aria-label='linea' className={`${classes[`badge${line}`]}`}>
+					<Avatar aria-label='linea' className={classes.badge}>
 						{line}
 					</Avatar>
 				}
