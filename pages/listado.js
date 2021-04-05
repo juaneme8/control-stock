@@ -1,17 +1,22 @@
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
+import { Avatar, Box, Button, Card, CardContent, CardHeader, Container, Grid, IconButton, makeStyles, TextField } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { lightBlue, red, blue, green, deepPurple, yellow } from '@material-ui/core/colors';
 import axios from 'axios';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import theme from '../src/theme';
 
 const useStyles = makeStyles(theme => ({
 	// List
-	container: {
-		marginTop: theme.spacing(2),
+
+	cardHeaderAction: {
+		marginTop: 0,
 	},
 
 	// Device
 	root: {
 		margin: theme.spacing(1),
+		background: '#eeeeee',
 	},
 	badge: {
 		backgroundColor: device => {
@@ -91,16 +96,11 @@ function List() {
 	return (
 		<>
 			<form onSubmit={handleSubmit}>
-				<Grid container>
-					<Grid item xs={11}>
-						<TextField value={searchInput} placeholder='Agregar Equipo' onChange={handleInputChange} fullWidth />
-					</Grid>
-					<Grid item xs={1}>
-						<Button type='submit' variant='contained' color='primary' size='small' fullWidth disabled={!searchInput}>
-							AGREGAR
-						</Button>
-					</Grid>
-				</Grid>
+				<TextField value={searchInput} placeholder='Agregar Equipo' onChange={handleInputChange} />
+
+				<IconButton type='submit' aria-label='delete' size='small' color='primary' disabled={!searchInput}>
+					<AddIcon />
+				</IconButton>
 			</form>
 
 			<Grid container>
@@ -116,7 +116,15 @@ function List() {
 
 const Device = ({ device }) => {
 	const classes = useStyles(device);
-	const { line, name } = device;
+	const { _id, line, name } = device;
+
+	const handleDelete = name => {
+		// const newDevices = devices.filter((_, index) => index !== todoIndex);
+
+		console.log(name);
+		// setDevices([...devices, { _id: _id, name: searchInput.slice(1), line: searchInput[0] }]);
+	};
+
 	return (
 		<Card className={classes.root}>
 			<CardHeader
@@ -126,8 +134,14 @@ const Device = ({ device }) => {
 						{line}
 					</Avatar>
 				}
+				classes={{ action: classes.cardHeaderAction }}
 				title={name}
 				subheader='barcode'
+				action={
+					<IconButton aria-label='eliminar' onClick={() => handleDelete(_id)}>
+						<DeleteIcon />
+					</IconButton>
+				}
 			/>
 		</Card>
 	);
