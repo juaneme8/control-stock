@@ -1,6 +1,6 @@
 import { Avatar, Box, Button, Card, CardContent, CardHeader, Container, Grid, makeStyles, TextField, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { grey, lightBlue, red, blue, green, deepPurple, yellow } from '@material-ui/core/colors';
+import { lightBlue, red, blue, green, deepPurple, yellow } from '@material-ui/core/colors';
 import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
@@ -12,7 +12,6 @@ const useStyles = makeStyles(theme => ({
 	// Device
 	root: {
 		margin: theme.spacing(1),
-		background: grey[100],
 	},
 	badge: {
 		backgroundColor: device => {
@@ -90,30 +89,28 @@ function List() {
 	};
 
 	return (
-		<Container maxWidth='md' className={classes.container}>
+		<>
 			<form onSubmit={handleSubmit}>
 				<Grid container>
 					<Grid item xs={11}>
 						<TextField value={searchInput} placeholder='Agregar Equipo' onChange={handleInputChange} fullWidth />
 					</Grid>
 					<Grid item xs={1}>
-						<Button type='submit' variant='contained' color='primary' size='small' fullWidth>
+						<Button type='submit' variant='contained' color='primary' size='small' fullWidth disabled={!searchInput}>
 							AGREGAR
 						</Button>
 					</Grid>
 				</Grid>
 			</form>
-			<Typography variant='h5' color='textSecondary'>
-				Listado de Equipos
-			</Typography>
+
 			<Grid container>
 				{devices.map(device => (
-					<Grid item key={device._id} xs={6} sm={4} md={3}>
+					<Grid item key={device._id} xs={4}>
 						<Device device={device} />
 					</Grid>
 				))}
 			</Grid>
-		</Container>
+		</>
 	);
 }
 
