@@ -56,7 +56,7 @@ function List() {
 			const res = await axios.get(`http://localhost:3000/api/devices/`);
 			const { data } = res;
 			if (data.success) {
-				console.table(data.data);
+				// console.table(data.data);
 				setDevices(data.data);
 			}
 		};
@@ -72,13 +72,26 @@ function List() {
 		setSearchInput(inputValue);
 	};
 
+	const handleDelete = async id => {
+		console.log(id);
+		const newDevices = devices.filter(device => device._id !== id);
+
+		console.log(newDevices);
+
+		const res = await axios.delete(`http://localhost:3000/api/devices/`, {
+			data: { _id: id },
+		});
+
+		setDevices(newDevices);
+	};
+
 	const handleSubmit = async e => {
 		e.preventDefault();
 
 		// Actualizo el valor de la DB
 		const res = await axios.post(`http://localhost:3000/api/devices/`, {
 			name: searchInput.slice(1),
-			line: searchInput[0],
+			line: searchInput[0].toUpperCase(),
 		});
 
 		const {
@@ -90,7 +103,7 @@ function List() {
 		// console.log(res);
 
 		// Actualizo la variable de estado
-		setDevices([...devices, { _id: _id, name: searchInput.slice(1), line: searchInput[0] }]);
+		setDevices([...devices, { _id: _id, name: searchInput.slice(1), line: searchInput[0].toUpperCase() }]);
 	};
 
 	return (
@@ -106,7 +119,7 @@ function List() {
 			<Grid container>
 				{devices.map(device => (
 					<Grid item key={device._id} xs={4}>
-						<Device device={device} />
+						<Device device={device} handleDelete={handleDelete} />
 					</Grid>
 				))}
 			</Grid>
@@ -114,16 +127,9 @@ function List() {
 	);
 }
 
-const Device = ({ device }) => {
+const Device = ({ device, handleDelete }) => {
 	const classes = useStyles(device);
 	const { _id, line, name } = device;
-
-	const handleDelete = name => {
-		// const newDevices = devices.filter((_, index) => index !== todoIndex);
-
-		console.log(name);
-		// setDevices([...devices, { _id: _id, name: searchInput.slice(1), line: searchInput[0] }]);
-	};
 
 	return (
 		<Card className={classes.root}>
