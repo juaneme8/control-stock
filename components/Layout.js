@@ -8,13 +8,18 @@ const useStyles = makeStyles(theme => ({
 	root: {
 		display: 'flex',
 	},
+	title: {
+		padding: theme.spacing(2),
+	},
 	drawer: {
 		width: drawerWidth,
 	},
 	drawerPaper: {
 		width: drawerWidth,
+		background: '#eeeeee',
 	},
 	appbar: {
+		background: '#212121',
 		width: `calc(100% -  ${drawerWidth}px)`,
 		marginLeft: drawerWidth,
 	},
@@ -32,6 +37,12 @@ function Layout({ children }) {
 	const sidebarLinks = [
 		{
 			id: 1,
+			title: 'Inicio',
+			url: '/',
+			icon: <ListIcon />,
+		},
+		{
+			id: 2,
 			title: 'Listado',
 			url: '/listado',
 			icon: <ListIcon />,
@@ -48,7 +59,7 @@ function Layout({ children }) {
 			<Drawer className={classes.drawer} variant='permanent' classes={{ paper: classes.drawerPaper }} anchor='left'>
 				<div>
 					<Typography variant='h5' className={classes.title}>
-						Control Stock
+						Menu
 					</Typography>
 				</div>
 
