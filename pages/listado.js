@@ -59,7 +59,7 @@ function List() {
       const { data } = res;
 
       if (data.success) {
-        // console.table(data.data);
+        console.table(data.data);
         setDevices(data.data);
       }
     };
