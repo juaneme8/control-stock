@@ -58,8 +58,9 @@ function List() {
       const res = await axios.get('http://localhost:3000/api/devices/');
       const { data } = res;
 
+      // Si el get fue exitoso
       if (data.success) {
-        console.table(data.data);
+        // console.table(data.data);
         setDevices(data.data);
       }
     };
