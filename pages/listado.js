@@ -1,156 +1,174 @@
-import { Avatar, Box, Button, Card, CardContent, CardHeader, Container, Grid, IconButton, makeStyles, TextField } from '@material-ui/core';
+import {
+  Avatar,
+  Card,
+  CardHeader,
+  Grid,
+  IconButton,
+  makeStyles,
+  TextField,
+} from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
-import { lightBlue, red, blue, green, deepPurple, yellow } from '@material-ui/core/colors';
+import { blue, deepPurple, green, lightBlue, red, yellow } from '@material-ui/core/colors';
 import axios from 'axios';
 import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
-import theme from '../src/theme';
+const useStyles = makeStyles((theme) => ({
+  // List
+  cardHeaderAction: {
+    marginTop: 0,
+  },
 
-const useStyles = makeStyles(theme => ({
-	// List
-
-	cardHeaderAction: {
-		marginTop: 0,
-	},
-
-	// Device
-	root: {
-		margin: theme.spacing(1),
-		background: '#eeeeee',
-	},
-	badge: {
-		backgroundColor: device => {
-			if (device.line === 'A') {
-				return lightBlue[900];
-			}
-			if (device.line === 'B') {
-				return red[900];
-			}
-			if (device.line === 'C') {
-				return blue[900];
-			}
-			if (device.line === 'D') {
-				return green[500];
-			}
-			if (device.line === 'E') {
-				return deepPurple[500];
-			}
-			if (device.line === 'H') {
-				return yellow[500];
-			}
-			if (device.line === 'P') {
-				return yellow[900];
-			}
-		},
-	},
+  // Device
+  root: {
+    margin: theme.spacing(1),
+    background: '#eeeeee',
+  },
+  badge: {
+    backgroundColor: (device) => {
+      if (device.line === 'A') {
+        return lightBlue[900];
+      }
+      if (device.line === 'B') {
+        return red[900];
+      }
+      if (device.line === 'C') {
+        return blue[900];
+      }
+      if (device.line === 'D') {
+        return green[500];
+      }
+      if (device.line === 'E') {
+        return deepPurple[500];
+      }
+      if (device.line === 'H') {
+        return yellow[500];
+      }
+      if (device.line === 'P') {
+        return yellow[900];
+      }
+    },
+  },
 }));
 
 function List() {
-	const classes = useStyles();
-	const [devices, setDevices] = useState([]);
-	const [searchInput, setSearchInput] = useState('');
+  const [devices, setDevices] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
 
-	useEffect(() => {
-		const fetchDevices = async () => {
-			console.log('fetchDevices');
-			const res = await axios.get(`http://localhost:3000/api/devices/`);
-			const { data } = res;
-			if (data.success) {
-				// console.table(data.data);
-				setDevices(data.data);
-			}
-		};
+  useEffect(() => {
+    const fetchDevices = async () => {
+      // console.log('fetchDevices');
+      const res = await axios.get('http://localhost:3000/api/devices/');
+      const { data } = res;
 
-		fetchDevices();
-	}, []);
+      if (data.success) {
+        // console.table(data.data);
+        setDevices(data.data);
+      }
+    };
 
-	const handleInputChange = e => {
-		const {
-			target: { value: inputValue },
-		} = e;
+    fetchDevices();
+  }, []);
 
-		setSearchInput(inputValue);
-	};
+  const handleInputChange = (e) => {
+    const {
+      target: { value: inputValue },
+    } = e;
 
-	const handleDelete = async id => {
-		console.log(id);
-		const newDevices = devices.filter(device => device._id !== id);
+    setSearchInput(inputValue);
+  };
 
-		console.log(newDevices);
+  const handleDelete = async (id) => {
+    // console.log(id);
+    const newDevices = devices.filter((device) => device._id !== id);
 
-		const res = await axios.delete(`http://localhost:3000/api/devices/`, {
-			data: { _id: id },
-		});
+    // console.log(newDevices);
 
-		setDevices(newDevices);
-	};
+    await axios.delete('http://localhost:3000/api/devices/', {
+      data: { _id: id },
+    });
 
-	const handleSubmit = async e => {
-		e.preventDefault();
+    setDevices(newDevices);
+  };
 
-		// Actualizo el valor de la DB
-		const res = await axios.post(`http://localhost:3000/api/devices/`, {
-			name: searchInput.slice(1),
-			line: searchInput[0].toUpperCase(),
-		});
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-		const {
-			data: {
-				data: { _id },
-			},
-		} = res;
+    // Actualizo el valor de la DB
+    const res = await axios.post('http://localhost:3000/api/devices/', {
+      name: searchInput.slice(1),
+      line: searchInput[0].toUpperCase(),
+    });
 
-		// console.log(res);
+    const {
+      data: {
+        data: { _id },
+      },
+    } = res;
 
-		// Actualizo la variable de estado
-		setDevices([...devices, { _id: _id, name: searchInput.slice(1), line: searchInput[0].toUpperCase() }]);
-	};
+    // console.log(res);
 
-	return (
-		<>
-			<form onSubmit={handleSubmit}>
-				<TextField value={searchInput} placeholder='Agregar Equipo' onChange={handleInputChange} />
+    // Actualizo la variable de estado
+    setDevices([
+      ...devices,
+      {
+        _id: _id,
+        name: searchInput.slice(1),
+        line: searchInput[0].toUpperCase(),
+      },
+    ]);
+  };
 
-				<IconButton type='submit' aria-label='delete' size='small' color='primary' disabled={!searchInput}>
-					<AddIcon />
-				</IconButton>
-			</form>
+  return (
+    <>
+      <form onSubmit={handleSubmit}>
+        <TextField placeholder="Agregar Equipo" value={searchInput} onChange={handleInputChange} />
 
-			<Grid container>
-				{devices.map(device => (
-					<Grid item key={device._id} xs={4}>
-						<Device device={device} handleDelete={handleDelete} />
-					</Grid>
-				))}
-			</Grid>
-		</>
-	);
+        <IconButton
+          aria-label="delete"
+          color="primary"
+          disabled={!searchInput}
+          size="small"
+          type="submit"
+        >
+          <AddIcon />
+        </IconButton>
+      </form>
+
+      <Grid container>
+        {devices.map((device) => (
+          <Grid key={device._id} item xs={4}>
+            <Device device={device} handleDelete={handleDelete} />
+          </Grid>
+        ))}
+      </Grid>
+    </>
+  );
 }
 
 const Device = ({ device, handleDelete }) => {
-	const classes = useStyles(device);
-	const { _id, line, name } = device;
+  const classes = useStyles(device);
+  const { _id, line, name } = device;
 
-	return (
-		<Card className={classes.root}>
-			<CardHeader
-				className={classes.cardHeader}
-				avatar={
-					<Avatar aria-label='linea' className={classes.badge}>
-						{line}
-					</Avatar>
-				}
-				classes={{ action: classes.cardHeaderAction }}
-				title={name}
-				subheader='barcode'
-				action={
-					<IconButton aria-label='eliminar' onClick={() => handleDelete(_id)}>
-						<DeleteIcon />
-					</IconButton>
-				}
-			/>
-		</Card>
-	);
+  return (
+    <Card className={classes.root}>
+      <CardHeader
+        action={
+          <IconButton aria-label="eliminar" onClick={() => handleDelete(_id)}>
+            <DeleteIcon />
+          </IconButton>
+        }
+        avatar={
+          <Avatar aria-label="linea" className={classes.badge}>
+            {line}
+          </Avatar>
+        }
+        className={classes.cardHeader}
+        classes={{ action: classes.cardHeaderAction }}
+        subheader="barcode"
+        title={name}
+      />
+    </Card>
+  );
 };
 
 export default List;
