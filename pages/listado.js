@@ -122,13 +122,7 @@ function List() {
       <form onSubmit={handleSubmit}>
         <TextField placeholder="Agregar Equipo" value={searchInput} onChange={handleInputChange} />
 
-        <IconButton
-          aria-label="delete"
-          color="primary"
-          disabled={!searchInput}
-          size="small"
-          type="submit"
-        >
+        <IconButton aria-label="delete" color="primary" disabled={!searchInput} size="small" type="submit">
           <AddIcon />
         </IconButton>
       </form>

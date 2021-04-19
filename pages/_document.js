@@ -1,6 +1,6 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
-import { ServerStyleSheets } from '@material-ui/core/styles';
+import Document, {Html, Head, Main, NextScript} from 'next/document';
+import {ServerStyleSheets} from '@material-ui/core/styles';
 
 import theme from '../src/theme';
 
@@ -11,10 +11,7 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta content={theme.palette.primary.main} name="theme-color" />
-          <link
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-            rel="stylesheet"
-          />
+          <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
         </Head>
         <body>
           <Main />

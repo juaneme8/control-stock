@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
-import { ThemeProvider } from '@material-ui/core/styles';
+import {ThemeProvider} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import theme from '../src/theme';
 import Layout from '../components/Layout';
 
-export default function MyApp({ Component, pageProps }) {
+export default function MyApp({Component, pageProps}) {
   React.useEffect(() => {
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector('#jss-server-side');
@@ -16,6 +16,8 @@ export default function MyApp({ Component, pageProps }) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
   }, []);
+
+  // console.log('testing with double braces');
 
   return (
     <React.Fragment>
