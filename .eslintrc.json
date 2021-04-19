@@ -3,7 +3,12 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "standard","plugin:prettier/recommended","plugin:react-hooks/recommended"],
+  "extends": [
+    "plugin:react/recommended",
+    "standard",
+    "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended"
+  ],
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -11,21 +16,52 @@
     "ecmaVersion": 12,
     "sourceType": "module"
   },
-  "plugins": ["react"],
+  "plugins": [
+    "react"
+  ],
   "rules": {
     "prettier/prettier": [
       "error",
       {
-        "singleQuote":true,
+        "singleQuote": true,
         "trailingComma": "es5",
         "printWidth": 120,
-        "endOfLine": "auto" 
+        "endOfLine": "auto"
       }
     ],
     "react/react-in-jsx-scope": "off",
     "react/prop-types": "off",
     "no-console": "warn",
-    "import/order": ["warn", { "newlines-between": "always" }],
+    "no-unused-vars": "warn",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          [
+            "sibling",
+            "parent"
+          ]
+        ],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "react"
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
     "react/self-closing-comp": "warn",
     "react/jsx-sort-props": [
       "warn",
@@ -38,12 +74,32 @@
     ],
     "padding-line-between-statements": [
       "error",
-      { "blankLine": "always", "prev": "*", "next": "return" },
-      { "blankLine": "always", "prev": ["const", "let", "var"], "next": "*" },
+      {
+        "blankLine": "always",
+        "prev": "*",
+        "next": "return"
+      },
+      {
+        "blankLine": "always",
+        "prev": [
+          "const",
+          "let",
+          "var"
+        ],
+        "next": "*"
+      },
       {
         "blankLine": "any",
-        "prev": ["const", "let", "var"],
-        "next": ["const", "let", "var"]
+        "prev": [
+          "const",
+          "let",
+          "var"
+        ],
+        "next": [
+          "const",
+          "let",
+          "var"
+        ]
       }
     ]
   }
