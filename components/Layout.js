@@ -66,12 +66,7 @@ function Layout({ children }) {
           <Typography variant="h6">CIME</Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        anchor="left"
-        className={classes.drawer}
-        classes={{ paper: classes.drawerPaper }}
-        variant="permanent"
-      >
+      <Drawer anchor="left" className={classes.drawer} classes={{ paper: classes.drawerPaper }} variant="permanent">
         <div>
           <Typography className={classes.title} variant="h5">
             Menu
