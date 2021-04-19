@@ -1,52 +1,25 @@
-import Avatar from '@material-ui/core/Avatar';
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+import React, { useEffect, useState } from 'react';
+
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import { blue, deepPurple, green, lightBlue, red, yellow } from '@material-ui/core/colors';
-import axios from 'axios';
 import AddIcon from '@material-ui/icons/Add';
-import DeleteIcon from '@material-ui/icons/Delete';
-const useStyles = makeStyles((theme) => ({
-  // List
-  cardHeaderAction: {
-    marginTop: 0,
-  },
+import axios from 'axios';
 
-  // Device
-  root: {
-    margin: theme.spacing(1),
-    background: '#eeeeee',
-  },
-  badge: {
-    backgroundColor: (device) => {
-      if (device.line === 'A') {
-        return lightBlue[900];
-      }
-      if (device.line === 'B') {
-        return red[900];
-      }
-      if (device.line === 'C') {
-        return blue[900];
-      }
-      if (device.line === 'D') {
-        return green[500];
-      }
-      if (device.line === 'E') {
-        return deepPurple[500];
-      }
-      if (device.line === 'H') {
-        return yellow[500];
-      }
-      if (device.line === 'P') {
-        return yellow[900];
-      }
-    },
-  },
-}));
+import Device from '../components/Device';
+
+// import DeviceModel from '../../../models/Device';
+// import dbConnect from '../../../utils/dbConnect';
+
+// export const getStaticProps = async () => {
+//   dbConnect();
+
+//   const devices = await DeviceModel.find({});
+
+//   return {
+//     props: devices
+//   };
+// };
 
 function List() {
   const [devices, setDevices] = useState([]);
@@ -137,31 +110,5 @@ function List() {
     </>
   );
 }
-
-const Device = ({ device, handleDelete }) => {
-  const classes = useStyles(device);
-  const { _id, line, name } = device;
-
-  return (
-    <Card className={classes.root}>
-      <CardHeader
-        action={
-          <IconButton aria-label="eliminar" onClick={() => handleDelete(_id)}>
-            <DeleteIcon />
-          </IconButton>
-        }
-        avatar={
-          <Avatar aria-label="linea" className={classes.badge}>
-            {line}
-          </Avatar>
-        }
-        className={classes.cardHeader}
-        classes={{ action: classes.cardHeaderAction }}
-        subheader="barcode"
-        title={name}
-      />
-    </Card>
-  );
-};
 
 export default List;
