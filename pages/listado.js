@@ -8,19 +8,6 @@ import axios from 'axios';
 
 import Device from '../components/Device';
 
-// import DeviceModel from '../../../models/Device';
-// import dbConnect from '../../../utils/dbConnect';
-
-// export const getStaticProps = async () => {
-//   dbConnect();
-
-//   const devices = await DeviceModel.find({});
-
-//   return {
-//     props: devices
-//   };
-// };
-
 function List() {
   const [devices, setDevices] = useState([]);
   const [searchInput, setSearchInput] = useState('');
