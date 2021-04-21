@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import TextField from '@material-ui/core/TextField';
-import AddIcon from '@material-ui/icons/Add';
+import { Button } from '@chakra-ui/button';
+import { Input } from '@chakra-ui/input';
+import { Box, Center, Container, Flex, Heading, Wrap, WrapItem } from '@chakra-ui/layout';
 import axios from 'axios';
 
+import AppBar from '../components/AppBar';
 import Device from '../components/Device';
 
 function List() {
@@ -75,25 +75,39 @@ function List() {
         line: searchInput[0].toUpperCase(),
       },
     ]);
+
+    setSearchInput('');
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <TextField placeholder="Agregar Equipo" value={searchInput} onChange={handleInputChange} />
+      <AppBar />
+      <Container maxWidth="1200px">
+        <Box bg="gray.100" mt="4" p="4" rounded="lg">
+          <Heading as="h3" color="teal.800" mb="2" size="lg">
+            Listado de Equipos
+          </Heading>
+        </Box>
 
-        <IconButton aria-label="delete" color="primary" disabled={!searchInput} size="small" type="submit">
-          <AddIcon />
-        </IconButton>
-      </form>
+        <form onSubmit={handleSubmit}>
+          <Flex mt="4">
+            <Input placeholder="Agregar Equipo" size="lg" value={searchInput} onChange={handleInputChange} />
+            <Button disabled={!searchInput} size="lg" type="submit">
+              +
+            </Button>
+          </Flex>
+        </form>
 
-      <Grid container>
-        {devices.map((device) => (
-          <Grid key={device._id} item xs={4}>
-            <Device device={device} handleDelete={handleDelete} />
-          </Grid>
-        ))}
-      </Grid>
+        <Wrap justify="center" mt="4">
+          {devices.map((device) => (
+            <div key={device._id}>
+              <Center bg="gray.100" m="4" p="6" rounded="lg" w="300px">
+                <Device device={device} handleDelete={handleDelete} />
+              </Center>
+            </div>
+          ))}
+        </Wrap>
+      </Container>
     </>
   );
 }
