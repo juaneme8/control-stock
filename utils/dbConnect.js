@@ -7,7 +7,7 @@ async function dbConnect() {
     return;
   }
 
-  return mongoose.connect('mongodb://localhost/control-stock', {
+  return mongoose.connect(process.env.MONGODB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
