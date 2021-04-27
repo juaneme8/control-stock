@@ -1,7 +1,7 @@
 import { Circle, Text, VStack } from '@chakra-ui/layout';
 
-const Device = ({ device, handleDelete }) => {
-  const { _id, line, name } = device;
+const Device = ({ device }) => {
+  const { line, name } = device;
 
   return (
     <VStack color="teal.800">
@@ -10,8 +10,6 @@ const Device = ({ device, handleDelete }) => {
       <Circle bg="teal.800" color="white" size="50px">
         <Text color="teal.100"> {line}</Text>
       </Circle>
-
-      <Text>{_id}</Text>
     </VStack>
   );
 };
