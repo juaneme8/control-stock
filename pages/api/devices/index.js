@@ -24,15 +24,7 @@ export default async function handler(req, res) {
         res.status(400).json({ success: false });
       }
       break;
-    case 'DELETE':
-      try {
-        const devices = await Device.findByIdAndDelete(req.body._id);
 
-        res.status(200).json({ success: true, data: devices });
-      } catch (error) {
-        res.status(400).json({ success: false });
-      }
-      break;
     default:
       res.status(400).json({ success: false });
       break;
