@@ -6,15 +6,24 @@ function MyApp({ Component, pageProps }) {
   return (
     <ChakraProvider>
       <Box padding={4}>
-        <Container borderRadius="sm" boxShadow="md" maxWidth="container.xl" padding={4}>
+        <Container borderRadius="sm" boxShadow="md" height="100vh" maxWidth="container.xl" padding={4}>
           <Flex justifyContent="space-between" mb={4}>
             <HStack spacing={4}>
-              <Button colorScheme="teal" variant="outline">
-                <Link href="/list">Listado</Link>
-              </Button>
-              <Button colorScheme="teal" variant="outline">
-                <Link href="/add">Agregar</Link>
-              </Button>
+              <Link href="/">
+                <Button colorScheme="teal" variant="outline">
+                  Inicio
+                </Button>
+              </Link>
+              <Link href="/list">
+                <Button colorScheme="teal" variant="outline">
+                  Listado Equipos
+                </Button>
+              </Link>
+              <Link href="/add">
+                <Button colorScheme="teal" variant="outline">
+                  Scanear Equipos
+                </Button>
+              </Link>
             </HStack>
             <DarkModeSwitch />
           </Flex>
