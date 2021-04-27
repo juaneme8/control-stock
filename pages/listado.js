@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 
 import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
-import { Box, Center, Container, Flex, Heading, Wrap, WrapItem } from '@chakra-ui/layout';
+import { Center, Container, Flex, Grid, GridItem, Heading } from '@chakra-ui/layout';
 import axios from 'axios';
+import { BiPlus } from 'react-icons/bi';
 
 import AppBar from '../components/AppBar';
 import Device from '../components/Device';
@@ -83,30 +84,28 @@ function List() {
     <>
       <AppBar />
       <Container maxWidth="1200px">
-        <Box bg="gray.100" mt="4" p="4" rounded="lg">
-          <Heading as="h3" color="teal.800" mb="2" size="lg">
-            Listado de Equipos
-          </Heading>
-        </Box>
+        <Heading as="h3" mt="6" size="lg">
+          Listado de Equipos
+        </Heading>
 
         <form onSubmit={handleSubmit}>
-          <Flex mt="4">
+          <Flex mt="6">
             <Input placeholder="Agregar Equipo" size="lg" value={searchInput} onChange={handleInputChange} />
-            <Button disabled={!searchInput} size="lg" type="submit">
-              +
+            <Button disabled={!searchInput} ml="2" size="lg" type="submit">
+              <BiPlus />
             </Button>
           </Flex>
         </form>
 
-        <Wrap justify="center" mt="4">
+        <Grid gap={6} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
           {devices.map((device) => (
-            <div key={device._id}>
-              <Center bg="gray.100" m="4" p="6" rounded="lg" w="300px">
+            <GridItem key={device._id}>
+              <Center bg="gray.100" p="6" rounded="lg">
                 <Device device={device} handleDelete={handleDelete} />
               </Center>
-            </div>
+            </GridItem>
           ))}
-        </Wrap>
+        </Grid>
       </Container>
     </>
   );
