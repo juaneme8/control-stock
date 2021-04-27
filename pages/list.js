@@ -36,19 +36,6 @@ function List() {
     setSearchInput(inputValue);
   };
 
-  const handleDelete = async (id) => {
-    // console.log(id);
-    const newDevices = devices.filter((device) => device._id !== id);
-
-    // console.log(newDevices);
-
-    await axios.delete('http://localhost:3000/api/devices/', {
-      data: { _id: id },
-    });
-
-    setDevices(newDevices);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -98,7 +85,7 @@ function List() {
         {devices.map((device) => (
           <GridItem key={device._id}>
             <Center bg="gray.100" p="6" rounded="lg">
-              <Device device={device} handleDelete={handleDelete} />
+              <Device device={device} />
             </Center>
           </GridItem>
         ))}
