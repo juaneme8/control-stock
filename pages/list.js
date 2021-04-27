@@ -4,7 +4,7 @@ import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
 import { Center, Flex, Grid, GridItem, Heading } from '@chakra-ui/layout';
 import axios from 'axios';
-import { BiPlus } from 'react-icons/bi';
+import { BiSearchAlt2 } from 'react-icons/bi';
 
 import Device from '../components/Device';
 
@@ -87,9 +87,9 @@ function List() {
 
       <form onSubmit={handleSubmit}>
         <Flex mt={4}>
-          <Input placeholder="Agregar Equipo" size="lg" value={searchInput} onChange={handleInputChange} />
+          <Input autoFocus placeholder="Agregar Equipo" size="lg" value={searchInput} onChange={handleInputChange} />
           <Button disabled={!searchInput} ml="2" size="lg" type="submit">
-            <BiPlus />
+            <BiSearchAlt2 />
           </Button>
         </Flex>
       </form>
