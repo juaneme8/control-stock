@@ -4,6 +4,7 @@ import { Button } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
 import { Center, Flex, Grid, GridItem, Heading } from '@chakra-ui/layout';
 import axios from 'axios';
+import Link from 'next/link';
 import { BiSearchAlt2 } from 'react-icons/bi';
 
 import Device from '../components/Device';
@@ -66,6 +67,12 @@ function List() {
     setSearchInput('');
   };
 
+  const getStateColor = (state) => {
+    if (state === 'approved') return 'green.400';
+    if (state === 'fix') return 'yellow.400';
+    if (state === 'rejected') return 'red.400';
+  };
+
   return (
     <>
       <Heading as="h2" size="lg">
@@ -81,10 +88,17 @@ function List() {
         </Flex>
       </form>
 
-      <Grid gap={6} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
+      <Grid gap={4} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
         {devices.map((device) => (
-          <GridItem key={device._id}>
-            <Center bg="gray.100" p="6" rounded="lg">
+          <GridItem key={device._id} as={Link} href={`/details/${device.barcode}`}>
+            <Center
+              bg="gray.50"
+              border="1px"
+              borderColor={getStateColor(device.state)}
+              cursor="pointer"
+              p={4}
+              rounded="lg"
+            >
               <Device device={device} />
             </Center>
           </GridItem>
