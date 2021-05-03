@@ -1,4 +1,4 @@
-import { HStack, Flex, Badge, Circle, Text, VStack } from '@chakra-ui/layout';
+import { HStack, Badge, Circle, Text, VStack } from '@chakra-ui/layout';
 
 const Device = ({ device }) => {
   const { state, barcode, name, description, line, location, manufacturer } = device;
