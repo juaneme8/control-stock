@@ -57,7 +57,7 @@ const DeviceDetails = ({ barcode }) => {
   };
 
   return (
-    <Box bg="gray.100" border="1px" borderColor="gray.300" borderRadius="md" mt={8} p={4}>
+    <Box bg="gray.50" border="1px" borderColor="gray.300" borderRadius="md" mt={8} p={4}>
       <Badge colorScheme="teal" mb={4} variant="solid">
         Código de Barras: {barcode}
       </Badge>
