@@ -7,7 +7,7 @@ const DeviceSchema = new mongoose.Schema({
   line: { type: String, required: false },
   manufacturer: { type: String, required: false },
   location: { type: String, required: false },
-  state: { type: String, enum: ['aprobado', 'para intervenir', 'rechazado'] },
+  state: { type: String, enum: ['approved', 'fix', 'rejected'] },
 });
 
 export default mongoose.models.Device || mongoose.model('Device', DeviceSchema);
