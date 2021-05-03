@@ -83,7 +83,7 @@ const DeviceDetails = ({ barcode }) => {
       </FormControl>
       <Center>
         <Button colorScheme="teal" variant="outline" onClick={handleSaveDevice}>
-          Guardar
+          {device ? 'Actualizar' : 'Crear Nuevo'}
         </Button>
       </Center>
     </Box>
