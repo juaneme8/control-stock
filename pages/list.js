@@ -11,6 +11,7 @@ import Device from '../components/Device';
 
 function List() {
   const [devices, setDevices] = useState([]);
+  const [showingDevices, setShowingDevices] = useState([]);
   const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
@@ -23,6 +24,7 @@ function List() {
       if (data.success) {
         // console.table(data.data);
         setDevices(data.data);
+        setShowingDevices(data.data);
       }
     };
 
@@ -35,36 +37,17 @@ function List() {
     } = e;
 
     setSearchInput(inputValue);
+    setShowingDevices(devices);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Actualizo el valor de la DB
-    const res = await axios.post('http://localhost:3000/api/devices/', {
-      name: searchInput.slice(1),
-      line: searchInput[0].toUpperCase(),
+    const auxDevices = devices.filter((device) => {
+      return device.name.includes(searchInput);
     });
 
-    const {
-      data: {
-        data: { _id },
-      },
-    } = res;
-
-    // console.log(res);
-
-    // Actualizo la variable de estado
-    setDevices([
-      ...devices,
-      {
-        _id: _id,
-        name: searchInput.slice(1),
-        line: searchInput[0].toUpperCase(),
-      },
-    ]);
-
-    setSearchInput('');
+    setShowingDevices(auxDevices);
   };
 
   const getStateColor = (state) => {
@@ -89,7 +72,7 @@ function List() {
       </form>
 
       <Grid gap={4} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
-        {devices.map((device) => (
+        {showingDevices.map((device) => (
           <GridItem key={device._id} as={Link} href={`/details/${device.barcode}`}>
             <Center
               bg="gray.50"
