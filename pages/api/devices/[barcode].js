@@ -17,7 +17,10 @@ export default async function handler(req, res) {
       break;
     case 'PUT':
       try {
-        const devices = await Device.findOneAndUpdate({ barcode: req.query.barcode }, req.body);
+        const devices = await Device.findOneAndUpdate({ barcode: req.query.barcode }, req.body, {
+          new: true,
+          upsert: true,
+        });
 
         res.status(201).json({ success: true, data: devices });
       } catch (error) {
