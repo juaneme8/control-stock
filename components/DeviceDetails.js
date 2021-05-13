@@ -1,10 +1,23 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, FormControl, FormLabel, Input, Badge, Box, Center, HStack, Radio, RadioGroup } from '@chakra-ui/react';
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Input,
+  Badge,
+  Box,
+  Center,
+  HStack,
+  Radio,
+  RadioGroup,
+  useToast,
+} from '@chakra-ui/react';
 import axios from 'axios';
 
 const DeviceDetails = ({ barcode }) => {
   const [device, setDevice] = useState({});
+  const toast = useToast();
 
   useEffect(() => {
     const fetchDevice = async () => {
@@ -47,12 +60,26 @@ const DeviceDetails = ({ barcode }) => {
       const { data } = res;
 
       // Si el get fue exitoso
-      if (data.success) {
-        // console.log('exito');
+      if (!data.success) {
         // mostrar mensaje de exito
+        toast({
+          title: 'Equipo creado exitosamente',
+          // description: 'El equipo fue creado exitosamente',
+          status: 'success',
+          duration: 9000,
+          isClosable: true,
+          position: 'bottom-left',
+        });
       } else {
         // mostrar mensaje de error
-        // console.log('noexito');
+        toast({
+          title: 'Ocurrió un error',
+          // description: 'Ocurrió un error al crear el equipo',
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position: 'bottom-left',
+        });
       }
     };
 
