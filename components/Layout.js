@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { Box, Button, Container, Flex, HStack, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Container, Flex, HStack, IconButton, useColorModeValue } from '@chakra-ui/react';
 import Link from 'next/link';
 
 import DarkModeSwitch from '../components/DarkModeSwitch';
 import Logo from './Logo';
 function Layout({ children }) {
-  const logoColor = useColorModeValue('#2C7A7B', '#8FD3CE');
+  // const logoColor = useColorModeValue('#2C7A7B', '#8FD3CE');
 
   return (
     <Box padding={4}>
@@ -14,7 +14,7 @@ function Layout({ children }) {
         <Flex justifyContent="space-between" mb={4}>
           <HStack spacing={4}>
             <Link href="/">
-              <Logo borderColor={logoColor} cursor="pointer" height="40px" width="40px" />
+              <IconButton colorScheme="teal" icon={<Logo />} variant="outline" />
             </Link>
 
             <Link href="/list">
