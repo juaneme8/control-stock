@@ -14,7 +14,7 @@ function Layout({ children }) {
         <Flex justifyContent="space-between" mb={4}>
           <HStack spacing={4}>
             <Link href="/">
-              <IconButton colorScheme="teal" icon={<Logo />} variant="outline" />
+              <IconButton borderRadius="50%" colorScheme="teal" icon={<Logo />} variant="outline" />
             </Link>
 
             <Link href="/list">
