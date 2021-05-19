@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Box, Button, Container, Flex, HStack, IconButton, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Container, Flex, HStack, IconButton } from '@chakra-ui/react';
 import Link from 'next/link';
 
 import DarkModeSwitch from '../components/DarkModeSwitch';
