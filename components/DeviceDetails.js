@@ -60,10 +60,10 @@ const DeviceDetails = ({ barcode }) => {
       const { data } = res;
 
       // Si el get fue exitoso
-      if (!data.success) {
+      if (data.success) {
         // mostrar mensaje de exito
         toast({
-          title: 'Equipo creado exitosamente',
+          title: 'Equipo actualizado exitosamente',
           // description: 'El equipo fue creado exitosamente',
           status: 'success',
           duration: 9000,
