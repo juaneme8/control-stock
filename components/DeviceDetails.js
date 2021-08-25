@@ -21,7 +21,7 @@ const DeviceDetails = ({ barcode }) => {
 
   useEffect(() => {
     const fetchDevice = async () => {
-      const res = await axios.get(`http://localhost:3000/api/devices/${barcode}`);
+      const res = await axios.get(`http://localhost:3001/api/devices/${barcode}`);
 
       const { data } = res;
 
@@ -48,7 +48,7 @@ const DeviceDetails = ({ barcode }) => {
 
   const handleSaveDevice = () => {
     const saveDevice = async () => {
-      const res = await axios.put(`http://localhost:3000/api/devices/${barcode}`, {
+      const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
         name: device.name,
         description: device.description,
         line: device.line,
