@@ -48,10 +48,14 @@ function List() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const auxDevices = devices.filter((device) => {
-      return device.name.includes(searchInput);
+    console.log(searchInput)
+
+    const auxDevices = showingDevices.filter((device) => {
+      console.log(device.description)
+      return device.description.includes(searchInput);
     });
 
+    console.log(auxDevices)
     setShowingDevices(auxDevices);
   };
 
