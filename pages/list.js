@@ -74,7 +74,7 @@ function List() {
 
       <Grid gap={4} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
         {showingDevices.map((device) => (
-          <GridItem key={device.id} as={Link} href={`/devices/${device.barcode}`}>
+          <GridItem key={device.id} as={Link} href={`/details/${device.barcode}`}>
             <Box
               bg="gray.50"
               border="1px"
