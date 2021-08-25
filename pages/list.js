@@ -16,17 +16,15 @@ function List() {
 
   useEffect(() => {
     const fetchDevices = async () => {
-      // console.log('fetchDevices');
-      const res = await axios.get('http://localhost:3000/api/devices/');
+      const res = await axios.get('http://localhost:3001/api/devices/');
       const { data } = res;
 
-      // Si el get fue exitoso
-      if (data.success) {
-        // console.table(data.data);
-        setDevices(data.data);
-        setShowingDevices(data.data);
-      }
-    };
+      console.log(data)
+
+      setDevices(data);
+      setShowingDevices(data);
+    
+    }
 
     fetchDevices();
   }, []);
@@ -73,7 +71,7 @@ function List() {
 
       <Grid gap={4} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
         {showingDevices.map((device) => (
-          <GridItem key={device._id} as={Link} href={`/details/${device.barcode}`}>
+          <GridItem key={device.id} as={Link} href={`/devices/${device.barcode}`}>
             <Center
               bg="gray.50"
               border="1px"
