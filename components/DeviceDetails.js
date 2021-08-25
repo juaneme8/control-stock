@@ -25,14 +25,10 @@ const DeviceDetails = ({ barcode }) => {
 
       const { data } = res;
 
-      // Si el get fue exitoso
-      if (data.success) {
         // Si el código buscado no existe obtengo null
-        if (!data.data) setDevice({});
-        else setDevice(data.data);
-      } else {
-        setDevice({});
-      }
+        if (!data) setDevice({});
+        else setDevice(data);
+    
     };
 
     fetchDevice();
@@ -49,18 +45,20 @@ const DeviceDetails = ({ barcode }) => {
   const handleSaveDevice = () => {
     const saveDevice = async () => {
       const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
-        name: device.name,
         description: device.description,
-        line: device.line,
-        manufacturer: device.manufacturer,
+        code: device.code,
+        serie: device.serie,
+        brand: device.brand,
+        catalogue: device.catalogue,
         location: device.location,
+        state: device.state,
         state: device.state,
       });
 
       const { data } = res;
 
       // Si el get fue exitoso
-      if (data.success) {
+      if (data) {
         // mostrar mensaje de exito
         toast({
           title: 'Equipo actualizado exitosamente',
