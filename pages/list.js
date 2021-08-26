@@ -11,90 +11,75 @@ import Device from '../components/Device';
 import { Box } from '@chakra-ui/react';
 
 function List() {
-  const [devices, setDevices] = useState([]);
-  const [showingDevices, setShowingDevices] = useState([]);
-  const [searchInput, setSearchInput] = useState('');
+	const [devices, setDevices] = useState([]);
+	const [showingDevices, setShowingDevices] = useState([]);
+	const [searchInput, setSearchInput] = useState('');
 
-  const getStateColor = (state) => {
-    if (state === 'approved') return 'green.400';
-    if (state === 'fix') return 'yellow.400';
-    if (state === 'rejected') return 'red.400';
-  };
-  
-  useEffect(() => {
-    const fetchDevices = async () => {
-      const res = await axios.get('http://localhost:3001/api/devices/');
-      const { data } = res;
+	const getStateColor = state => {
+		if (state === 'approved') return 'green.400';
+		if (state === 'fix') return 'yellow.400';
+		if (state === 'rejected') return 'red.400';
+	};
 
-      console.log(data)
+	useEffect(() => {
+		const fetchDevices = async () => {
+			const res = await axios.get('http://localhost:3001/api/devices/');
+			const { data } = res;
 
-      setDevices(data);
-      setShowingDevices(data);
-    
-    }
+			// console.log(data);
 
-    fetchDevices();
-  }, []);
+			setDevices(data);
+			setShowingDevices(data);
+		};
 
-  const handleInputChange = (e) => {
-    const {
-      target: { value: inputValue },
-    } = e;
+		fetchDevices();
+	}, []);
+
+	const handleInputChange = e => {
+		const {
+			target: { value: inputValue },
+		} = e;
 
     setSearchInput(inputValue);
-    setShowingDevices(devices);
-  };
+    
+    if (inputValue === '') {
+      setShowingDevices(devices)
+    }
+    else {
+    const aux = devices.filter(device => device.description?.toLowerCase().includes(inputValue.toLowerCase()))
+		setShowingDevices(aux);
+      
+    }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+	};
 
-    console.log(searchInput)
+	return (
+		<>
+			<Heading as='h2' size='lg'>
+				Listado de Equipos
+			</Heading>
 
-    const auxDevices = showingDevices.filter((device) => {
-      console.log(device.description)
-      return device.description.includes(searchInput);
-    });
+      <Input autoFocus placeholder='Agregar Equipo' mt={5} size='lg' value={searchInput} onChange={handleInputChange} />
 
-    console.log(auxDevices)
-    setShowingDevices(auxDevices);
-  };
-
-
-
-  return (
-    <>
-      <Heading as="h2" size="lg">
-        Listado de Equipos
-      </Heading>
-
-      <form onSubmit={handleSubmit}>
-        <Flex mt={4}>
-          <Input autoFocus placeholder="Agregar Equipo" size="lg" value={searchInput} onChange={handleInputChange} />
-          <Button disabled={!searchInput} ml="2" size="lg" type="submit">
-            <BiSearchAlt2 />
-          </Button>
-        </Flex>
-      </form>
-
-      <Grid gap={4} mt="6" templateColumns="repeat(auto-fill, minmax(200px,1fr))">
-        {showingDevices.map((device) => (
-          <GridItem key={device.id} as={Link} href={`/details/${device.barcode}`}>
-            <Box
-              bg="gray.50"
-              border="1px"
-              // borderColor={getStateColor(device.state)}
-              borderColor="gray.400"
-              cursor="pointer"
-              p={4}
-              rounded="lg"
-            >
-              <Device device={device} />
-            </Box>
-          </GridItem>
-        ))}
-      </Grid>
-    </>
-  );
+			<Grid gap={4} mt='6' templateColumns='repeat(auto-fill, minmax(200px,1fr))'>
+				{showingDevices.map(device => (
+					<GridItem key={device.id} as={Link} href={`/details/${device.barcode}`}>
+						<Box
+							bg='gray.50'
+							border='1px'
+							// borderColor={getStateColor(device.state)}
+							borderColor='gray.400'
+							cursor='pointer'
+							p={4}
+							rounded='lg'
+						>
+							<Device device={device} />
+						</Box>
+					</GridItem>
+				))}
+			</Grid>
+		</>
+	);
 }
 
 export default List;

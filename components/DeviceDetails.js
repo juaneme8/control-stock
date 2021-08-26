@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, FormControl, FormLabel, Input, Badge, Box, Center, HStack, Radio, RadioGroup, useToast, SimpleGrid } from '@chakra-ui/react';
+import { Button, Text, FormControl, FormLabel, Input, Badge, Box, Center, HStack, Radio, RadioGroup, useToast, SimpleGrid, Flex, Circle } from '@chakra-ui/react';
 import axios from 'axios';
 
 const DeviceDetails = ({ barcode }) => {
@@ -31,7 +31,9 @@ const DeviceDetails = ({ barcode }) => {
 
 	const handleSaveDevice = () => {
 		const saveDevice = async () => {
+			console.log(barcode);
 			const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
+				barcode,
 				description: device.description,
 				code: device.code,
 				serie: device.serie,
@@ -40,6 +42,8 @@ const DeviceDetails = ({ barcode }) => {
 				location: device.location,
 				state: device.state,
 			});
+
+			console.log(res)
 
 			const { data } = res;
 
@@ -70,13 +74,23 @@ const DeviceDetails = ({ barcode }) => {
 		saveDevice();
 	};
 
+	const getStateColor = (state) => {
+		if (state === 'approved') return 'green.400';
+		if (state === 'fix') return 'yellow.400';
+		if (state === 'rejected') return 'red.400';
+	};
 	console.log(device);
-
+	
 	return (
 		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 			<Badge colorScheme='teal' mb={4} variant='solid'>
 				Código de Barras: {barcode}
 			</Badge>
+
+			<Flex align="center">
+      <Circle size="10px" bg={getStateColor(device.state)} color="white"></Circle> 
+        <Text bg="gray.200" borderRadius="md" px={1} fontSize="sm" align="center" flex="1" ml={2}>{barcode}</Text>
+      </Flex>
 
 			<FormControl as='fieldset' id='state' mb={4}>
 				<FormLabel as='legend'>Estado</FormLabel>
