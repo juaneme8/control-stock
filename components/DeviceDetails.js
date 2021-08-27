@@ -30,7 +30,7 @@ const DeviceDetails = ({ barcode, state }) => {
 		const fetchDevice = async () => {
 			try {
 				const res = await axios.get(`http://localhost:3001/api/devices/${barcode}`);
-				console.log('stat', res.status);
+				// console.log('Status: ', res.status);
 
 				setDevice(res.data);
 			} catch (error) {
@@ -76,7 +76,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					brand: device.brand,
 					description: device.description,
 					location: device.location,
-					state: device.state,
+					state: device.state||'fix',
 					// image: device.image,
 					// catalogue: device.catalogue,
 				});
@@ -123,7 +123,7 @@ const DeviceDetails = ({ barcode, state }) => {
 		saveDevice();
 	};
 
-	console.log(device);
+	// console.log(device);
 
 	return (
 		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
