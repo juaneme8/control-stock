@@ -7,9 +7,11 @@ import DeviceDetails from '../../components/DeviceDetails';
 function Details() {
   const router = useRouter();
 
+  console.log(router.query)
+
   return (
     <div>
-      <DeviceDetails barcode={router.query.id} />
+      <DeviceDetails barcode={router.query.id} state={router.query.state} />
     </div>
   );
 }
