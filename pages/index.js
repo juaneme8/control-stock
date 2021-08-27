@@ -54,7 +54,7 @@ export default function Home() {
 	};
 
 	const handleNewDevice = () => {
-		router.push(`/details/${searchInput}`);
+		router.push(`/details/${searchInput}?state=new`);
 	};
 
 	return (
@@ -79,7 +79,8 @@ export default function Home() {
 			/>
 
 			<Grid gap={4} mt='6' templateColumns='repeat(auto-fill, minmax(200px,1fr))'>
-				{showingDevices.map(device => (
+        {showingDevices.map(device => (
+          device.active && 
 					<GridItem key={device.id} as={Link} href={`/details/${device.barcode}`}>
 						<Box
 							bg='gray.50'
