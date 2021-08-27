@@ -4,7 +4,7 @@ export const getStateColor = state => {
     if (state === 'rejected') return 'red.400';
 };
 
-export const getLineColor = () => {
+export const getLineColor = (location) => {
     if (location === 'Linea A') return 'blue.100';
     if (location === 'Linea B') return 'red.400';
     if (location === 'Linea C') return 'blue.400';
