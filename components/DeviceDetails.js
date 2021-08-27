@@ -1,15 +1,26 @@
 import {
 	Badge,
-	Box, Button, Circle, Flex, FormControl,
-	FormLabel, HStack, Input, Select, SimpleGrid, Stack, useToast
+	Box,
+	Button,
+	Circle,
+	Flex,
+	FormControl,
+	FormLabel,
+	HStack,
+	IconButton,
+	Input,
+	Select,
+	SimpleGrid,
+	Stack,
+	useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { getStateColor } from '../utils/helpers';
 
-
-const DeviceDetails = ({ barcode }) => {
+import { FaTrash } from 'react-icons/fa';
+const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
 
 	const [device, setDevice] = useState({});
@@ -17,16 +28,20 @@ const DeviceDetails = ({ barcode }) => {
 
 	useEffect(() => {
 		const fetchDevice = async () => {
-			const res = await axios.get(`http://localhost:3001/api/devices/${barcode}`);
+			try {
+				const res = await axios.get(`http://localhost:3001/api/devices/${barcode}`);
+				console.log('stat', res.status);
 
-			const { data } = res;
-
-			// Si el código buscado no existe obtengo null
-			if (!data) setDevice({});
-			else setDevice(data);
+				setDevice(res.data);
+			} catch (error) {
+				console.log(error);
+			}
 		};
 
-		fetchDevice();
+		// Si la url es ?state=new no quiero buscarlo en la DB pues es un equipo nuevo
+		if (state !== 'new') {
+			fetchDevice();
+		}
 	}, [barcode]);
 
 	const handleInputChange = e => {
@@ -37,13 +52,38 @@ const DeviceDetails = ({ barcode }) => {
 		setDevice({ ...device, state: e.target.value });
 	};
 
+	const handleDeleteDevice = () => {
+		const deleteDevice = async () => {
+			const res = await axios.delete(`http://localhost:3001/api/devices/${barcode}`);
+		};
+
+		deleteDevice();
+	};
+
 	const handleCancel = () => {
 		router.push('/');
 	};
 
 	const handleSaveDevice = () => {
 		const saveDevice = async () => {
-			// console.log(barcode);
+			console.log(barcode);
+			//Si es un dispositivo nuevo
+			if (state === 'new') {
+				const res = await axios.post(`http://localhost:3001/api/devices`, {
+					barcode,
+					code: device.code,
+					serie: device.serie,
+					brand: device.brand,
+					description: device.description,
+					location: device.location,
+					state: device.state,
+					// image: device.image,
+					// catalogue: device.catalogue,
+				});
+			}
+			//Si estoy actualizando un dispositivo existente
+			else {
+			}
 			const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
 				code: device.code,
 				serie: device.serie,
@@ -87,18 +127,21 @@ const DeviceDetails = ({ barcode }) => {
 
 	return (
 		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
-			<HStack>
-				<Circle size='15px' bg={getStateColor(device.state)} color='white'></Circle>
-				<Badge mb={4} variant='solid' fontSize='0.8em'>
-					EQUIPO: {barcode}
-				</Badge>
+			<HStack justify='space-between'>
+				<HStack>
+					<Circle size='15px' bg={getStateColor(device.state)} color='white'></Circle>
+					<Badge mb={4} variant='solid' fontSize='0.8em'>
+						EQUIPO: {barcode}
+					</Badge>
+				</HStack>
+				<IconButton variant='outline' aria-label='Eliminar Equipo' fontSize='20px' icon={<FaTrash />} onClick={handleDeleteDevice} />
 			</HStack>
 
 			<Flex align='center'></Flex>
 
 			<FormControl as='fieldset' id='state' mb={4}>
 				<FormLabel as='legend'>Estado</FormLabel>
-				
+
 				<Stack spacing={3}>
 					<Select variant='outline' value={device?.state || `fix`} onChange={handleSelectChange}>
 						<option value='approved'>Aprobado</option>
