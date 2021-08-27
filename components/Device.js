@@ -1,18 +1,9 @@
 import { Text } from '@chakra-ui/layout';
 import { Box, Circle, Flex } from '@chakra-ui/react';
-import { getLineColor } from '../utils/helpers';
+import { getLineColor,getStateColor } from '../utils/helpers';
 
 const Device = ({ device }) => {
   const { barcode, description, code, serie, brand, location, state, image, catalogue } = device;
-
-
-
-  const getStateColor = (state) => {
-    if (state === 'approved') return 'green.400';
-    if (state === 'fix') return 'yellow.400';
-    if (state === 'rejected') return 'red.400';
-  };
-
   return (
     <Box color="gray.600">
       <Flex align="center">
@@ -24,7 +15,7 @@ const Device = ({ device }) => {
         {description}
       </Text>
 
-      <Text bg={getLineColor()} borderRadius="md" color="white" px={2}>
+      <Text bg={getLineColor(location)} borderRadius="md" color="white" px={2}>
         {location}
       </Text>
      
