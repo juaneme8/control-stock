@@ -1,27 +1,13 @@
-import React, { useEffect, useState } from 'react';
-
 import {
-	Button,
-	Text,
-	FormControl,
-	FormLabel,
-	Input,
 	Badge,
-	Box,
-	Center,
-	HStack,
-	Radio,
-	RadioGroup,
-	useToast,
-	SimpleGrid,
-	Flex,
-	Circle,
-	Stack,
-	Select,
+	Box, Button, Circle, Flex, FormControl,
+	FormLabel, HStack, Input, Select, SimpleGrid, Stack, useToast
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 import { getStateColor } from '../utils/helpers';
+
 
 const DeviceDetails = ({ barcode }) => {
 	const router = useRouter();

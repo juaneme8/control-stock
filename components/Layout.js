@@ -1,10 +1,10 @@
-import React from 'react';
-
-import { Box, Button, Container, Flex, HStack, IconButton } from '@chakra-ui/react';
+import { Box, Container, Flex, HStack, IconButton } from '@chakra-ui/react';
 import Link from 'next/link';
-
+import React from 'react';
 import DarkModeSwitch from '../components/DarkModeSwitch';
 import Logo from './Logo';
+
+
 function Layout({ children }) {
   // const logoColor = useColorModeValue('#2C7A7B', '#8FD3CE');
 
