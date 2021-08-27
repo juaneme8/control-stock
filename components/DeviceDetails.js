@@ -55,6 +55,31 @@ const DeviceDetails = ({ barcode, state }) => {
 	const handleDeleteDevice = () => {
 		const deleteDevice = async () => {
 			const res = await axios.delete(`http://localhost:3001/api/devices/${barcode}`);
+			// console.log(res);
+
+			// Si la actualización fue exitosa
+			if (res.status === 201) {
+				// mostrar mensaje de exito
+				toast({
+					title: 'Equipo eliminado correctamente',
+					// description: 'El equipo fue creado exitosamente',
+					status: 'warning',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+					onCloseComplete: () => router.push('/'),
+				});
+			} else {
+				// mostrar mensaje de error
+				toast({
+					title: 'Ocurrió un error',
+					// description: 'Ocurrió un error al crear el equipo',
+					status: 'error',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			}
 		};
 
 		deleteDevice();
@@ -76,7 +101,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					brand: device.brand,
 					description: device.description,
 					location: device.location,
-					state: device.state||'fix',
+					state: device.state || 'fix',
 					// image: device.image,
 					// catalogue: device.catalogue,
 				});
@@ -102,7 +127,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					title: 'Equipo actualizado exitosamente',
 					// description: 'El equipo fue creado exitosamente',
 					status: 'success',
-					duration: 2000,
+					duration: 1000,
 					isClosable: true,
 					position: 'bottom-left',
 					onCloseComplete: () => router.push('/'),
@@ -113,7 +138,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					title: 'Ocurrió un error',
 					// description: 'Ocurrió un error al crear el equipo',
 					status: 'error',
-					duration: 2000,
+					duration: 1000,
 					isClosable: true,
 					position: 'bottom-left',
 				});
