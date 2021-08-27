@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Text, FormControl, FormLabel, Input, Badge, Box, Center, HStack, Radio, RadioGroup, useToast, SimpleGrid, Flex, Circle } from '@chakra-ui/react';
+import { Button, Text, FormControl, FormLabel, Input, Badge, Box, Center, HStack, Radio, RadioGroup, useToast, SimpleGrid, Flex, Circle, Stack } from '@chakra-ui/react';
 import axios from 'axios';
+import { useRouter } from 'next/router'
 
 const DeviceDetails = ({ barcode }) => {
+	const router = useRouter()
+
 	const [device, setDevice] = useState({});
 	const toast = useToast();
 
@@ -28,6 +31,10 @@ const DeviceDetails = ({ barcode }) => {
 		// console.log(e);
 		setDevice({ ...device, state: e });
 	};
+
+	const handleCancel = () => {
+		router.push('/')
+	}
 
 	const handleSaveDevice = () => {
 		const saveDevice = async () => {
@@ -135,11 +142,14 @@ const DeviceDetails = ({ barcode }) => {
 
 
 
-			<Center>
+			<HStack justify="center">
+			<Button colorScheme='red' variant='outline' onClick={handleCancel}>
+					Cancelar
+				</Button>
 				<Button colorScheme='teal' variant='outline' onClick={handleSaveDevice}>
 					{device.id ? 'Actualizar' : 'Crear Nuevo'}
 				</Button>
-			</Center>
+			</HStack>
 		</Box>
 	);
 };
