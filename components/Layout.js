@@ -17,16 +17,11 @@ function Layout({ children }) {
               <IconButton borderRadius="50%" colorScheme="teal" icon={<Logo />} variant="outline" />
             </Link>
 
-            <Link href="/list">
+            {/* <Link href="/list">
               <Button colorScheme="teal" variant="outline">
                 Listado Equipos
               </Button>
-            </Link>
-            <Link href="/add">
-              <Button colorScheme="teal" variant="outline">
-                Scanear Equipos
-              </Button>
-            </Link>
+            </Link> */}
           </HStack>
           <DarkModeSwitch />
         </Flex>
