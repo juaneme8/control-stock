@@ -96,8 +96,8 @@ const DeviceDetails = ({ barcode, state }) => {
 			if (state === 'new') {
 				const res = await axios.post(`http://localhost:3001/api/devices`, {
 					barcode,
-					code: device.code,
-					serie: device.serie,
+					code: device.code.toUpperCase(),
+					serie: device.serie.toUpperCase(),
 					brand: device.brand,
 					description: device.description,
 					location: device.location,
@@ -110,8 +110,8 @@ const DeviceDetails = ({ barcode, state }) => {
 			else {
 			}
 			const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
-				code: device.code,
-				serie: device.serie,
+				code: device.code.toUpperCase(),
+				serie: device.serie.toUpperCase(),
 				brand: device.brand,
 				description: device.description,
 				location: device.location,
