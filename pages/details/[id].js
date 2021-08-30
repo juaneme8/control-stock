@@ -7,7 +7,7 @@ import DeviceDetails from '../../components/DeviceDetails';
 function Details() {
   const router = useRouter();
 
-  console.log(router.query)
+  // console.log(router.query)
 
   return (
     <div>
