@@ -13,13 +13,18 @@ import {
 	SimpleGrid,
 	Stack,
 	useToast,
+	Text,
+	Center,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { getStateColor } from '../utils/helpers';
 
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaSave } from 'react-icons/fa';
+
+import { format } from 'date-fns';
+
 const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
 
@@ -148,7 +153,50 @@ const DeviceDetails = ({ barcode, state }) => {
 		saveDevice();
 	};
 
-	// console.log(device);
+	const handleNewRepair = deviceId => {
+		const postRepair = async deviceId => {
+			const res = await axios.post(`http://localhost:3001/api/repairs/${deviceId}`);
+			// console.log(res);
+
+			// Si la actualización fue exitosa
+			if (res.status === 200) {
+				// mostrar mensaje de exito
+				toast({
+					title: 'Reparación creada correctamente',
+					// description: 'El equipo fue creado exitosamente',
+					status: 'success',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			} else {
+				// mostrar mensaje de error
+				toast({
+					title: 'Ocurrió un error',
+					// description: 'Ocurrió un error al crear el equipo',
+					status: 'error',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			}
+		};
+
+		console.log(deviceId);
+		postRepair(deviceId);
+	};
+
+	const handleDeleteRepair = (repairId) => {
+		console.log(repairId)
+		console.log('handleDeleteRepair');
+	};
+
+	const handleUpdateRepair = (repairId) => {
+		console.log(repairId)
+		console.log('handleUpdateRepair');
+	};
+
+	console.log(device.repairs);
 
 	return (
 		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
@@ -200,7 +248,80 @@ const DeviceDetails = ({ barcode, state }) => {
 				<Input name='brand' value={device?.brand || ``} onChange={handleInputChange} />
 			</FormControl>
 
-			<HStack justify='center'>
+			<Button colorScheme='teal' variant='outline' onClick={() => handleNewRepair(device.id)}>
+				Agregar Reparación
+			</Button>
+			{device.repairs?.length > 0
+				? device.repairs.map(repair => (
+						<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
+							<HStack justify='space-between'>
+								{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
+									<FormLabel as='legend'>Fecha de Entrada</FormLabel>
+									<Input name='brand' value={repair.entryDate} />
+								</FormControl> */}
+								<Box>
+									<Text fontWeight='semibold' align='center'>
+										Fecha Entrada
+									</Text>
+									{repair.entryDate ? (
+										<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy')}</Text>
+									) : (
+										<Text align='center'>-</Text>
+									)}
+								</Box>
+								<Box>
+									<Text fontWeight='semibold' align='center'>
+										Fecha Reparación
+									</Text>
+									{repair.repairDate ? (
+										<Text align='center'>{format(new Date(repair.repairDate), 'dd/MM/yy')}</Text>
+									) : (
+										<Text align='center'>-</Text>
+									)}
+								</Box>
+								<Box>
+									<Text fontWeight='semibold' align='center'>
+										Fecha Salida
+									</Text>
+									{repair.exitDate ? (
+										<Text align='center'>{format(new Date(repair.exitDate), 'dd/MM/yy')}</Text>
+									) : (
+										<Text align='center'>-</Text>
+									)}
+								</Box>
+							<HStack>
+							{!repair.exitDate ? (
+									<IconButton
+										variant='outline'
+										aria-label='Actualizar Reparación'
+										icon={<FaSave />}
+										onClick={() => handleUpdateRepair(repair.id)}
+										colorScheme='teal'
+									/>
+										
+								) : null}
+								
+							<IconButton
+									variant='outline'
+									aria-label='Eliminar Reparación'
+									icon={<FaTrash />}
+									onClick={() => handleUpdateRepair(repair.id)}
+									colorScheme='red'
+							/>
+							
+						</HStack>
+							</HStack>
+
+							<FormControl id='brand' mt={4}>
+								<FormLabel as='legend'>Descripción:</FormLabel>
+								<Input name='brand' value={repair.description || ``} onChange={handleInputChange} />
+							</FormControl>
+							
+						</Box>
+				  ))
+				: null}
+
+			<HStack justify='center' mt={4}>
 				<Button colorScheme='red' variant='outline' onClick={handleCancel}>
 					Cancelar
 				</Button>
