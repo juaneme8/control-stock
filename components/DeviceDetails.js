@@ -168,7 +168,7 @@ const DeviceDetails = ({ barcode, state }) => {
 				<FormLabel as='legend'>Estado</FormLabel>
 
 				<Stack spacing={3}>
-					<Select variant='outline' value={device?.state || `fix`} onChange={handleSelectChange}>
+					<Select bg={getStateColor(device.state)} variant='outline' value={device?.state || `fix`} onChange={handleSelectChange}>
 						<option value='approved'>Aprobado</option>
 						<option value='fix'>Para Intervenir</option>
 						<option value='rejected'>Rechazado</option>
