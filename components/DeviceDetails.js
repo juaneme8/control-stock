@@ -27,7 +27,7 @@ import { FaTrash, FaSave, FaPlus } from 'react-icons/fa';
 
 import { format } from 'date-fns';
 
-import SkipChangesDialog from './SkipChangesDialog'
+import SkipChangesDialog from './SkipChangesDialog';
 
 const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
@@ -119,6 +119,9 @@ const DeviceDetails = ({ barcode, state }) => {
 					// image: device.image,
 					// catalogue: device.catalogue,
 				});
+
+				const res2 = await axios.post(`http://localhost:3001/api/repairs/${res.data.id}`);
+				console.log(res2.data);
 			}
 			//Si estoy actualizando un dispositivo existente
 			else {
@@ -163,7 +166,7 @@ const DeviceDetails = ({ barcode, state }) => {
 	};
 
 	const handleNewRepair = deviceId => {
-		console.log('handleNewRepair');
+		// console.log('handleNewRepair');
 		const postRepair = async deviceId => {
 			const res = await axios.post(`http://localhost:3001/api/repairs/${deviceId}`);
 			console.log(res.data);
@@ -310,155 +313,158 @@ const DeviceDetails = ({ barcode, state }) => {
 	const handleSubmit = () => {
 		if (unsavedChanges) {
 			setIsOpen(true);
-		}
-		else {
+		} else {
 			handleSaveDevice();
 		}
-	}
+	};
 
 	// console.log(device.repairs);
 
 	return (
 		<>
 			<SkipChangesDialog isOpen={isOpen} setIsOpen={setIsOpen} handleSkipChanges={handleSaveDevice} />
-		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
-			<Heading>Datos Equipo</Heading>
-			<Divider orientation='horizontal' />
-			<HStack justify='space-between' mt={4}>
-				<HStack>
-					<Circle size='15px' bg={getStateColor(device.state)} color='white'></Circle>
-					<Badge mb={4} variant='solid' fontSize='0.8em'>
-						EQUIPO: {barcode}
-					</Badge>
+			<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+				<Heading>Datos Equipo</Heading>
+				<Divider orientation='horizontal' />
+				<HStack justify='space-between' mt={4}>
+					<HStack>
+						<Circle size='15px' bg={getStateColor(device.state)} color='white'></Circle>
+						<Badge mb={4} variant='solid' fontSize='0.8em'>
+							EQUIPO: {barcode}
+						</Badge>
+					</HStack>
+					<IconButton variant='outline' aria-label='Eliminar Equipo' fontSize='20px' icon={<FaTrash />} onClick={handleDeleteDevice} />
 				</HStack>
-				<IconButton variant='outline' aria-label='Eliminar Equipo' fontSize='20px' icon={<FaTrash />} onClick={handleDeleteDevice} />
-			</HStack>
 
-			<FormControl as='fieldset' id='state' mb={4}>
-				<FormLabel as='legend'>Estado</FormLabel>
+				<FormControl as='fieldset' id='state' mb={4}>
+					<FormLabel as='legend'>Estado</FormLabel>
 
-				<Stack spacing={3}>
-					<Select bg={getStateColor(device.state)} variant='outline' value={device?.state || `fix`} onChange={handleSelectChange}>
-						<option value='approved'>Aprobado</option>
-						<option value='fix'>Para Intervenir</option>
-						<option value='rejected'>Rechazado</option>
-					</Select>
-				</Stack>
-			</FormControl>
-
-			<FormControl id='description' mb={4}>
-				<FormLabel as='legend'>Descripción</FormLabel>
-				<Input name='description' value={device?.description || ``} onChange={handleInputChange} />
-			</FormControl>
-			<SimpleGrid columns={2} spacing={10}>
-				<FormControl id='serie' mb={4}>
-					<FormLabel as='legend'>N/S</FormLabel>
-					<Input name='serie' value={device?.serie || ``} onChange={handleInputChange} />
+					<Stack spacing={3}>
+						<Select bg={getStateColor(device.state)} variant='outline' value={device?.state || `fix`} onChange={handleSelectChange}>
+							<option value='approved'>Aprobado</option>
+							<option value='fix'>Para Intervenir</option>
+							<option value='rejected'>Rechazado</option>
+						</Select>
+					</Stack>
 				</FormControl>
-				<FormControl id='code' mb={4}>
-					<FormLabel as='legend'>Código</FormLabel>
-					<Input name='code' value={device?.code || ``} onChange={handleInputChange} />
+
+				<FormControl id='description' mb={4}>
+					<FormLabel as='legend'>Descripción</FormLabel>
+					<Input name='description' value={device?.description || ``} onChange={handleInputChange} />
 				</FormControl>
-			</SimpleGrid>
-			<FormControl id='location' mb={4}>
-				<FormLabel as='legend'>Ubicación</FormLabel>
-				<Input name='location' value={device?.location || ``} onChange={handleInputChange} />
-			</FormControl>
+				<SimpleGrid columns={2} spacing={10}>
+					<FormControl id='serie' mb={4}>
+						<FormLabel as='legend'>N/S</FormLabel>
+						<Input name='serie' value={device?.serie || ``} onChange={handleInputChange} />
+					</FormControl>
+					<FormControl id='code' mb={4}>
+						<FormLabel as='legend'>Código</FormLabel>
+						<Input name='code' value={device?.code || ``} onChange={handleInputChange} />
+					</FormControl>
+				</SimpleGrid>
+				<FormControl id='location' mb={4}>
+					<FormLabel as='legend'>Ubicación</FormLabel>
+					<Input name='location' value={device?.location || ``} onChange={handleInputChange} />
+				</FormControl>
 
-			<FormControl id='brand' mb={4}>
-				<FormLabel as='legend'>Flota</FormLabel>
-				<Input name='brand' value={device?.brand || ``} onChange={handleInputChange} />
-			</FormControl>
+				<FormControl id='brand' mb={4}>
+					<FormLabel as='legend'>Flota</FormLabel>
+					<Input name='brand' value={device?.brand || ``} onChange={handleInputChange} />
+				</FormControl>
+				<HStack justify='center' mt={4}>
+					<Button colorScheme='red' variant='outline' onClick={handleCancel}>
+						Volver al inicio
+					</Button>
+					<Button colorScheme='teal' variant='outline' onClick={handleSubmit}>
+						{device.id ? 'Actualizar Datos Equipo' : 'Crear Nuevo Equipo'}
+					</Button>
+				</HStack>
 
-			<Heading>Reparaciones</Heading>
-			<Divider orientation='horizontal' />
-			<Button rightIcon={<FaPlus />} colorScheme='teal' variant='outline' onClick={() => handleNewRepair(device.id)} mt={4}>
-				Agregar Reparación
-			</Button>
-			{device.repairs?.length > 0
-				? device.repairs.map(
-						repair =>
-							repair.active && (
-								<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
-									<HStack justify='space-between'>
-										{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
+				{device.repairs?.length > 0 ? (
+					<>
+						<Center>
+							<Button rightIcon={<FaPlus />} colorScheme='teal' variant='outline' onClick={() => handleNewRepair(device.id)} mt={4}>
+								Nuevo Ingreso
+							</Button>
+						</Center>
+						<Heading>Reparaciones</Heading>
+						<Divider orientation='horizontal' />
+
+						{device.repairs.map(
+							repair =>
+								repair.active && (
+									<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
+										<HStack justify='space-between'>
+											{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
 									<FormLabel as='legend'>Fecha de Entrada</FormLabel>
 									<Input name='brand' value={repair.entryDate} />
 								</FormControl> */}
-										<Box>
-											<Text fontWeight='semibold' align='center'>
-												Fecha Entrada
-											</Text>
-											{repair.entryDate ? (
-												<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy hh:mm:ss')}hs</Text>
-											) : (
-												<Text align='center'>-</Text>
-											)}
-										</Box>
-										<Box>
-											<Text fontWeight='semibold' align='center'>
-												Fecha Reparación
-											</Text>
-											{repair.repairDate ? (
-												<Text align='center'>{format(new Date(repair.repairDate), 'dd/MM/yy hh:mm:ss')}hs</Text>
-											) : (
-												<Text align='center'>-</Text>
-											)}
-										</Box>
-										<Box>
-											<Text fontWeight='semibold' align='center'>
-												Fecha Salida
-											</Text>
-											{repair.exitDate ? (
-												<Text align='center'>{format(new Date(repair.exitDate), 'dd/MM/yy hh:mm:ss')}hs</Text>
-											) : (
-												<Text align='center'>-</Text>
-											)}
-										</Box>
-										<HStack>
-											{unsavedChanges ? (
+											<Box>
+												<Text fontWeight='semibold' align='center'>
+													Fecha Entrada
+												</Text>
+												{repair.entryDate ? (
+													<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
+												) : (
+													<Text align='center'>-</Text>
+												)}
+											</Box>
+											<Box>
+												<Text fontWeight='semibold' align='center'>
+													Fecha Reparación
+												</Text>
+												{repair.repairDate ? (
+													<Text align='center'>{format(new Date(repair.repairDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
+												) : (
+													<Text align='center'>-</Text>
+												)}
+											</Box>
+											<Box>
+												<Text fontWeight='semibold' align='center'>
+													Fecha Salida
+												</Text>
+												{repair.exitDate ? (
+													<Text align='center'>{format(new Date(repair.exitDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
+												) : (
+													<Text align='center'>-</Text>
+												)}
+											</Box>
+											<HStack>
+												{unsavedChanges ? (
+													<IconButton
+														variant='outline'
+														aria-label='Actualizar Reparación'
+														icon={<FaSave />}
+														onClick={() => handleUpdateRepair(repair.id)}
+														colorScheme='teal'
+													/>
+												) : null}
+
 												<IconButton
 													variant='outline'
-													aria-label='Actualizar Reparación'
-													icon={<FaSave />}
-													onClick={() => handleUpdateRepair(repair.id)}
-													colorScheme='teal'
+													aria-label='Eliminar Reparación'
+													icon={<FaTrash />}
+													onClick={() => handleDeleteRepair(repair.id)}
+													colorScheme='red'
 												/>
-											) : null}
-
-											<IconButton
-												variant='outline'
-												aria-label='Eliminar Reparación'
-												icon={<FaTrash />}
-												onClick={() => handleDeleteRepair(repair.id)}
-												colorScheme='red'
-											/>
+											</HStack>
 										</HStack>
-									</HStack>
 
-									<FormControl id={`description${repair.id}`} mt={4}>
-										<FormLabel as='legend'>Descripción:</FormLabel>
-										<Input
-											name={`description${repair.id}`}
-											value={repair.description || ``}
-											onChange={e => handleRepairChange(e, repair.id)}
-										/>
-									</FormControl>
-								</Box>
-							)
-				  )
-				: null}
-
-				<HStack justify='center' mt={4}>
-					<Button colorScheme='red' variant='outline' onClick={handleCancel}>
-						Cancelar
-					</Button>
-					<Button colorScheme='teal' variant='outline' onClick={handleSubmit}>
-						{device.id ? 'Actualizar' : 'Crear Nuevo'}
-					</Button>
-				</HStack>
+										<FormControl id={`description${repair.id}`} mt={4}>
+											<FormLabel as='legend'>Descripción:</FormLabel>
+											<Input
+												name={`description${repair.id}`}
+												value={repair.description || ``}
+												onChange={e => handleRepairChange(e, repair.id)}
+											/>
+										</FormControl>
+									</Box>
+								)
+						)}
+					</>
+				) : null}
 			</Box>
-			</>
+		</>
 	);
 };
 
