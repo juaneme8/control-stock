@@ -27,11 +27,14 @@ import { FaTrash, FaSave, FaPlus } from 'react-icons/fa';
 
 import { format } from 'date-fns';
 
+import SkipChangesDialog from './SkipChangesDialog'
+
 const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
 
 	const [device, setDevice] = useState({});
 	const [unsavedChanges, setUnsavedChanges] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
 	const toast = useToast();
 
 	useEffect(() => {
@@ -308,6 +311,8 @@ const DeviceDetails = ({ barcode, state }) => {
 	// console.log(device.repairs);
 
 	return (
+		<>
+			<SkipChangesDialog isOpen={isOpen} setIsOpen={setIsOpen} handleSkipChanges={handleSaveDevice} />
 		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 			<Heading>Datos Equipo</Heading>
 			<Divider orientation='horizontal' />
@@ -440,11 +445,12 @@ const DeviceDetails = ({ barcode, state }) => {
 					<Button colorScheme='red' variant='outline' onClick={handleCancel}>
 						Cancelar
 					</Button>
-					<Button colorScheme='teal' variant='outline' onClick={handleSaveDevice}>
+					<Button colorScheme='teal' variant='outline' onClick={() => setIsOpen(true)}>
 						{device.id ? 'Actualizar' : 'Crear Nuevo'}
 					</Button>
 				</HStack>
-		</Box>
+			</Box>
+			</>
 	);
 };
 
