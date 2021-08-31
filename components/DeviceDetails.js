@@ -403,7 +403,7 @@ const DeviceDetails = ({ barcode, state }) => {
 											)}
 										</Box>
 										<HStack>
-											{!repair.exitDate ? (
+											{unsavedChanges ? (
 												<IconButton
 													variant='outline'
 													aria-label='Actualizar Reparación'
