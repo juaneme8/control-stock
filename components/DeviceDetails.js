@@ -271,7 +271,6 @@ const DeviceDetails = ({ barcode, state }) => {
 					duration: 1000,
 					isClosable: true,
 					position: 'bottom-left',
-					onCloseComplete: () => router.push('/'),
 				});
 			} else {
 				// mostrar mensaje de error
@@ -307,6 +306,15 @@ const DeviceDetails = ({ barcode, state }) => {
 
 		setDevice({ ...device, repairs: repairsArr });
 	};
+
+	const handleSubmit = () => {
+		if (unsavedChanges) {
+			setIsOpen(true);
+		}
+		else {
+			handleSaveDevice();
+		}
+	}
 
 	// console.log(device.repairs);
 
@@ -445,7 +453,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					<Button colorScheme='red' variant='outline' onClick={handleCancel}>
 						Cancelar
 					</Button>
-					<Button colorScheme='teal' variant='outline' onClick={() => setIsOpen(true)}>
+					<Button colorScheme='teal' variant='outline' onClick={handleSubmit}>
 						{device.id ? 'Actualizar' : 'Crear Nuevo'}
 					</Button>
 				</HStack>
