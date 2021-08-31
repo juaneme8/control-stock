@@ -15,13 +15,15 @@ import {
 	useToast,
 	Text,
 	Center,
+	Heading,
+	Divider,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { getStateColor } from '../utils/helpers';
 
-import { FaTrash, FaSave } from 'react-icons/fa';
+import { FaTrash, FaSave, FaPlus } from 'react-icons/fa';
 
 import { format } from 'date-fns';
 
@@ -48,6 +50,9 @@ const DeviceDetails = ({ barcode, state }) => {
 			fetchDevice();
 		}
 	}, [barcode]);
+
+	// console.log('state', state)
+	// console.log('barcode', barcode)
 
 	const handleInputChange = e => {
 		setDevice({ ...device, [e.target.name]: e.target.value });
@@ -87,7 +92,7 @@ const DeviceDetails = ({ barcode, state }) => {
 			}
 		};
 
-		deleteDevice();
+		// deleteDevice();
 	};
 
 	const handleCancel = () => {
@@ -96,7 +101,7 @@ const DeviceDetails = ({ barcode, state }) => {
 
 	const handleSaveDevice = () => {
 		const saveDevice = async () => {
-			console.log(barcode);
+			// console.log(barcode);
 			//Si es un dispositivo nuevo
 			if (state === 'new') {
 				const res = await axios.post(`http://localhost:3001/api/devices`, {
@@ -154,9 +159,17 @@ const DeviceDetails = ({ barcode, state }) => {
 	};
 
 	const handleNewRepair = deviceId => {
+		console.log('handleNewRepair')
 		const postRepair = async deviceId => {
 			const res = await axios.post(`http://localhost:3001/api/repairs/${deviceId}`);
-			// console.log(res);
+			console.log(res.data);
+
+			const { id, entryDate, active } = res.data;
+			// Creo un array auxiliar al que le agregaré la reparación
+			const repairsArr = device.repairs;
+			repairsArr.push({ id, entryDate, active });
+
+			setDevice({...device, repairs: repairsArr})
 
 			// Si la actualización fue exitosa
 			if (res.status === 200) {
@@ -182,25 +195,124 @@ const DeviceDetails = ({ barcode, state }) => {
 			}
 		};
 
-		console.log(deviceId);
+		// console.log(deviceId);
 		postRepair(deviceId);
 	};
 
 	const handleDeleteRepair = (repairId) => {
-		console.log(repairId)
-		console.log('handleDeleteRepair');
+		// console.log('handleDeleteRepair')
+		const deleteRepair = async () => {
+			const res = await axios.delete(`http://localhost:3001/api/repairs/${repairId}`);
+			// console.log(res);
+
+			// Creo un array auxiliar al que le sacaré la reparación eliminada
+			let repairsArr = device.repairs;
+			repairsArr = repairsArr.filter(repair => repair.id !==repairId)
+
+			setDevice({...device, repairs: repairsArr})
+
+			// Si el borrado fue exitoso
+			if (res.status === 204) {
+				// mostrar mensaje de exito
+				toast({
+					title: 'Reparación eliminada correctamente',
+					// description: 'El equipo fue creado exitosamente',
+					status: 'warning',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			} else {
+				// mostrar mensaje de error
+				toast({
+					title: 'Ocurrió un error',
+					// description: 'Ocurrió un error al crear el equipo',
+					status: 'error',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			}
+		};
+
+		deleteRepair();
 	};
 
 	const handleUpdateRepair = (repairId) => {
-		console.log(repairId)
-		console.log('handleUpdateRepair');
+		console.log('handleUpdateRepair')
+		// console.log(repairId)
+		// console.log('handleUpdateRepair');
+		const updateRepair = async () => {
+
+			let description = ''
+			device.repairs.forEach(repair => {
+				if (repair.id === repairId) {
+					description = repair.description;
+				}
+			})
+
+
+			const res = await axios.put(`http://localhost:3001/api/repairs/${repairId}`, {
+				description
+			});
+
+			console.log(res);
+
+			// Si la actualización fue exitosa
+			if (res.status === 200) {
+				// mostrar mensaje de exito
+				toast({
+					title: 'Reparación actualizada exitosamente',
+					// description: 'El equipo fue creado exitosamente',
+					status: 'success',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+					onCloseComplete: () => router.push('/'),
+				});
+			} else {
+				// mostrar mensaje de error
+				toast({
+					title: 'Ocurrió un error',
+					// description: 'Ocurrió un error al crear el equipo',
+					status: 'error',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			}
+		};
+
+		updateRepair();
 	};
+
+	const handleRepairChange = (e, repairId) => {
+		console.log('handleRepairChange');
+		console.log(e.target.value)
+		console.log(repairId)
+
+		let repairsArr = device.repairs;
+		repairsArr.forEach(repair => {
+			if (repair.id === repairId) {
+				repair.description = e.target.value;
+			}
+		})
+
+		console.log(repairsArr)
+
+
+		setDevice({ ...device, repairs: repairsArr });
+		// setDevice({device, repair})
+
+	}
 
 	console.log(device.repairs);
 
 	return (
 		<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
-			<HStack justify='space-between'>
+			<Heading>Datos Equipo</Heading>
+			<Divider orientation="horizontal" />
+			<HStack justify='space-between' mt={4}>
 				<HStack>
 					<Circle size='15px' bg={getStateColor(device.state)} color='white'></Circle>
 					<Badge mb={4} variant='solid' fontSize='0.8em'>
@@ -209,8 +321,6 @@ const DeviceDetails = ({ barcode, state }) => {
 				</HStack>
 				<IconButton variant='outline' aria-label='Eliminar Equipo' fontSize='20px' icon={<FaTrash />} onClick={handleDeleteDevice} />
 			</HStack>
-
-			<Flex align='center'></Flex>
 
 			<FormControl as='fieldset' id='state' mb={4}>
 				<FormLabel as='legend'>Estado</FormLabel>
@@ -248,11 +358,15 @@ const DeviceDetails = ({ barcode, state }) => {
 				<Input name='brand' value={device?.brand || ``} onChange={handleInputChange} />
 			</FormControl>
 
-			<Button colorScheme='teal' variant='outline' onClick={() => handleNewRepair(device.id)}>
+			
+			<Heading>Reparaciones</Heading>
+			<Divider orientation="horizontal" />
+			<Button rightIcon={<FaPlus/>} colorScheme='teal' variant='outline' onClick={() => handleNewRepair(device.id)} mt={4}>
 				Agregar Reparación
 			</Button>
 			{device.repairs?.length > 0
 				? device.repairs.map(repair => (
+						repair.active && 
 						<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
 							<HStack justify='space-between'>
 								{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
@@ -264,7 +378,7 @@ const DeviceDetails = ({ barcode, state }) => {
 										Fecha Entrada
 									</Text>
 									{repair.entryDate ? (
-										<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy')}</Text>
+										<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy hh:mm:ss')}</Text>
 									) : (
 										<Text align='center'>-</Text>
 									)}
@@ -305,16 +419,16 @@ const DeviceDetails = ({ barcode, state }) => {
 									variant='outline'
 									aria-label='Eliminar Reparación'
 									icon={<FaTrash />}
-									onClick={() => handleUpdateRepair(repair.id)}
+									onClick={() => handleDeleteRepair(repair.id)}
 									colorScheme='red'
 							/>
 							
 						</HStack>
 							</HStack>
 
-							<FormControl id='brand' mt={4}>
+							<FormControl id='description' mt={4}>
 								<FormLabel as='legend'>Descripción:</FormLabel>
-								<Input name='brand' value={repair.description || ``} onChange={handleInputChange} />
+							<Input name='description' value={repair.description || ``} onChange={(e) => handleRepairChange(e, repair.id)}/>
 							</FormControl>
 							
 						</Box>
