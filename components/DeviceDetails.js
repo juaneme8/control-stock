@@ -242,8 +242,43 @@ const DeviceDetails = ({ barcode, state }) => {
 			}
 		};
 
+		// Actualizo el estado del equipo poniendolo en amarillo.
+		const updateState = async () => {
+			const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
+				state: 'fix',
+			});
+
+			// Si la actualización fue exitosa
+			if (res.status === 201) {
+				// mostrar mensaje de exito
+				toast({
+					title: 'Equipo actualizado exitosamente',
+					// description: 'El equipo fue creado exitosamente',
+					status: 'success',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+					// onCloseComplete: () => router.push('/'),
+				});
+			} else {
+				// mostrar mensaje de error
+				toast({
+					title: 'Ocurrió un error',
+					// description: 'Ocurrió un error al crear el equipo',
+					status: 'error',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			}
+		};
+
+
 		// console.log(deviceId);
 		postRepair(deviceId);
+
+		updateState();
+
 	};
 
 	const handleDeleteRepair = repairId => {
@@ -329,6 +364,39 @@ const DeviceDetails = ({ barcode, state }) => {
 			}
 		};
 
+		// Actualizo el estado del equipo poniendolo en verde.
+		const updateState = async () => {
+			const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
+				state: 'approved',
+			});
+
+			// Si la actualización fue exitosa
+			if (res.status === 201) {
+				// mostrar mensaje de exito
+				toast({
+					title: 'Equipo actualizado exitosamente',
+					// description: 'El equipo fue creado exitosamente',
+					status: 'success',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+					// onCloseComplete: () => router.push('/'),
+				});
+			} else {
+				// mostrar mensaje de error
+				toast({
+					title: 'Ocurrió un error',
+					// description: 'Ocurrió un error al crear el equipo',
+					status: 'error',
+					duration: 1000,
+					isClosable: true,
+					position: 'bottom-left',
+				});
+			}
+		};
+
+		updateState();
+
 		updateRepair();
 	};
 
@@ -396,7 +464,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					<FormLabel as='legend'>Estado</FormLabel>
 
 					<Stack spacing={3}>
-						<Select bg={getStateColor(device.state)} variant='outline' value={device?.state || `fix`} onChange={handleSelectChange}>
+						<Select bg={getStateColor(device.state|| `fix`)} variant='outline' value={device?.state || `fix`} onChange={handleSelectChange} isDisabled>
 							<option value='approved'>Aprobado</option>
 							<option value='fix'>Para Intervenir</option>
 							<option value='rejected'>Rechazado</option>
@@ -440,7 +508,7 @@ const DeviceDetails = ({ barcode, state }) => {
 				<FormControl id='location' mb={4}>
 					<FormLabel as='legend'>Ubicación</FormLabel>
 
-					<Select variant='outline' name='location' value={device?.location || ``} onChange={handleInputChange}>
+					<Select variant='outline' name='location' value={device?.location || 'CIME'} onChange={handleInputChange}>
 						<option value=''>Elija una Ubicación</option>
 						{locations.length > 0 &&
 							locations.map(location => {
@@ -453,7 +521,14 @@ const DeviceDetails = ({ barcode, state }) => {
 
 				<FormControl id='brand' mb={4}>
 					<FormLabel as='legend'>Flota</FormLabel>
-					<Input name='brand' value={device?.brand || ``} onChange={handleInputChange} />
+					<Select variant='outline' name='brand' value={device?.brand || ``} onChange={handleInputChange} >
+							<option value=''>Seleccione la flota</option>
+							<option value='Alstom 100'>Alstom 100</option>
+							<option value='Alstom 300'>Alstom 300</option>
+							<option value='CNR'>CNR</option>
+							<option value='Mitsubishi'>Mitsubishi</option>
+					</Select>
+
 				</FormControl>
 				<HStack justify='center' mt={4} spacing={5}>
 					<IconButton colorScheme='teal' variant='outline' onClick={handleCancel}>
@@ -474,7 +549,7 @@ const DeviceDetails = ({ barcode, state }) => {
 							repair =>
 								repair.active && (
 									<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
-										<HStack justify='space-between'>
+										<SimpleGrid columns={4} spacing={10}>
 											{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
 									<FormLabel as='legend'>Fecha de Entrada</FormLabel>
 									<Input name='brand' value={repair.entryDate} />
@@ -509,8 +584,8 @@ const DeviceDetails = ({ barcode, state }) => {
 													<Text align='center'>-</Text>
 												)}
 											</Box>
-											<HStack>
-												{unsavedChanges ? (
+											<HStack justify='flex-end'>
+												{unsavedChanges && !repair.exitDate ? (
 													<IconButton
 														variant='outline'
 														aria-label='Actualizar Reparación'
@@ -520,7 +595,9 @@ const DeviceDetails = ({ barcode, state }) => {
 													/>
 												) : null}
 
-												<Tooltip label='Eliminar Reparación' placement='right-start'>
+												{/* Si en un futuro doy la posibilidad de borrar, no podré usar 
+												[device.repairs.length - 1].exitDate*/}
+												{/* <Tooltip label='Eliminar Reparación' placement='right-start'>
 													<IconButton
 														variant='outline'
 														aria-label='Eliminar Reparación'
@@ -528,9 +605,9 @@ const DeviceDetails = ({ barcode, state }) => {
 														onClick={() => handleDeleteRepair(repair.id)}
 														colorScheme='red'
 													/>
-												</Tooltip>
+												</Tooltip> */}
 											</HStack>
-										</HStack>
+										</SimpleGrid>
 
 										<FormControl id={`description${repair.id}`} mt={4}>
 											<FormLabel as='legend'>Descripción:</FormLabel>
@@ -538,6 +615,8 @@ const DeviceDetails = ({ barcode, state }) => {
 												name={`description${repair.id}`}
 												value={repair.description || ``}
 												onChange={e => handleRepairChange(e, repair.id)}
+												isReadOnly={repair.exitDate}
+												isDisabled={repair.exitDate}
 											/>
 										</FormControl>
 									</Box>
