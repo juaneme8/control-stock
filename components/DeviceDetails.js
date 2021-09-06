@@ -17,13 +17,14 @@ import {
 	Center,
 	Heading,
 	Divider,
+	Tooltip,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { getStateColor } from '../utils/helpers';
 
-import { FaTrash, FaSave, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaSave, FaPlus, FaAngleLeft } from 'react-icons/fa';
 
 import { format } from 'date-fns';
 
@@ -38,6 +39,7 @@ const DeviceDetails = ({ barcode, state }) => {
 	const [locations, setLocations] = useState({});
 	const [unsavedChanges, setUnsavedChanges] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
+	const [outdatedData, setOutdatedData] = useState(false);
 	const toast = useToast();
 
 	useEffect(() => {
@@ -46,6 +48,7 @@ const DeviceDetails = ({ barcode, state }) => {
 				const res = await axios.get(`http://localhost:3001/api/devices/${barcode}`);
 				// console.log('Status: ', res.status);
 
+				setOutdatedData(false);
 				setDevice(res.data);
 			} catch (error) {
 				console.log(error);
@@ -56,7 +59,7 @@ const DeviceDetails = ({ barcode, state }) => {
 		if (state !== 'new') {
 			fetchDevice();
 		}
-	}, [barcode]);
+	}, [barcode, outdatedData]);
 
 	// Obtengo las descripciones de equipos
 	useEffect(() => {
@@ -297,6 +300,7 @@ const DeviceDetails = ({ barcode, state }) => {
 				description,
 			});
 
+			setOutdatedData(true);
 			setUnsavedChanges(false);
 
 			// console.log(res);
@@ -383,7 +387,9 @@ const DeviceDetails = ({ barcode, state }) => {
 							EQUIPO: {barcode}
 						</Badge>
 					</HStack>
-					<IconButton variant='outline' aria-label='Eliminar Equipo' fontSize='20px' icon={<FaTrash />} onClick={handleDeleteDevice} />
+					<Tooltip label='Eliminar Equipo' placement='right-start'>
+						<IconButton variant='outline' aria-label='Eliminar Equipo' fontSize='20px' icon={<FaTrash />} onClick={handleDeleteDevice} />
+					</Tooltip>
 				</HStack>
 
 				<FormControl as='fieldset' id='state' mb={4}>
@@ -422,7 +428,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					</FormControl>
 					<FormControl id='code' mb={4}>
 						<FormLabel as='legend'>Código Fabricante</FormLabel>
-						<Input name='code' variant="filled" value={device?.code || ``} onChange={handleInputChange} isDisabled />
+						<Input name='code' variant='filled' value={device?.code || ``} onChange={handleInputChange} isDisabled />
 					</FormControl>
 				</SimpleGrid>
 
@@ -449,22 +455,18 @@ const DeviceDetails = ({ barcode, state }) => {
 					<FormLabel as='legend'>Flota</FormLabel>
 					<Input name='brand' value={device?.brand || ``} onChange={handleInputChange} />
 				</FormControl>
-				<HStack justify='center' mt={4}>
-					<Button colorScheme='red' variant='outline' onClick={handleCancel}>
-						Volver al inicio
-					</Button>
-					<Button colorScheme='teal' variant='outline' onClick={handleSubmit}>
-						{device.id ? 'Actualizar Datos Equipo' : 'Crear Nuevo Equipo'}
-					</Button>
+				<HStack justify='center' mt={4} spacing={5}>
+					<IconButton colorScheme='teal' variant='outline' onClick={handleCancel}>
+						<FaAngleLeft />
+					</IconButton>
+					<IconButton colorScheme='teal' variant='outline' onClick={handleSubmit}>
+						<FaSave />
+					</IconButton>
 				</HStack>
-
+			</Box>
+			<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 				{device.repairs?.length > 0 ? (
 					<>
-						<Center>
-							<Button rightIcon={<FaPlus />} colorScheme='teal' variant='outline' onClick={() => handleNewRepair(device.id)} mt={4}>
-								Nuevo Ingreso
-							</Button>
-						</Center>
 						<Heading>Reparaciones</Heading>
 						<Divider orientation='horizontal' />
 
@@ -518,13 +520,15 @@ const DeviceDetails = ({ barcode, state }) => {
 													/>
 												) : null}
 
-												<IconButton
-													variant='outline'
-													aria-label='Eliminar Reparación'
-													icon={<FaTrash />}
-													onClick={() => handleDeleteRepair(repair.id)}
-													colorScheme='red'
-												/>
+												<Tooltip label='Eliminar Reparación' placement='right-start'>
+													<IconButton
+														variant='outline'
+														aria-label='Eliminar Reparación'
+														icon={<FaTrash />}
+														onClick={() => handleDeleteRepair(repair.id)}
+														colorScheme='red'
+													/>
+												</Tooltip>
 											</HStack>
 										</HStack>
 
@@ -539,6 +543,13 @@ const DeviceDetails = ({ barcode, state }) => {
 									</Box>
 								)
 						)}
+						{device.repairs[device.repairs.length - 1].exitDate ? (
+							<Tooltip label='Crear nuevo ingreso al Laboratorio' placement='right-start'>
+								<IconButton variant='outline' colorScheme='teal' onClick={() => handleNewRepair(device.id)} mt={4}>
+									<FaPlus />
+								</IconButton>
+							</Tooltip>
+						) : null}
 					</>
 				) : null}
 			</Box>
