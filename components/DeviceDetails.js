@@ -33,6 +33,9 @@ const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
 
 	const [device, setDevice] = useState({});
+	const [descriptionsList, setDescriptionsList] = useState({});
+	const [descriptionDetails, setDescriptionDetails] = useState({});
+	const [locations, setLocations] = useState({});
 	const [unsavedChanges, setUnsavedChanges] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const toast = useToast();
@@ -55,10 +58,44 @@ const DeviceDetails = ({ barcode, state }) => {
 		}
 	}, [barcode]);
 
+	// Obtengo las descripciones de equipos
+	useEffect(() => {
+		const fetchDescriptionsList = async () => {
+			try {
+				const res = await axios.get(`http://localhost:3001/api/catalogues`);
+				// console.log('Status: ', res.status);
+
+				setDescriptionsList(res.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		fetchDescriptionsList();
+	}, []);
+
+	// Obtengo las localizaciones
+	useEffect(() => {
+		const fetchLocations = async () => {
+			try {
+				const res = await axios.get(`http://localhost:3001/api/locations`);
+				// console.log('Status: ', res.status);
+
+				setLocations(res.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		fetchLocations();
+	}, []);
+
 	// console.log('state', state)
 	// console.log('barcode', barcode)
 
 	const handleInputChange = e => {
+		// console.log(e.target.name)
+		// console.log(e.target.value)
 		setDevice({ ...device, [e.target.name]: e.target.value });
 	};
 	const handleSelectChange = e => {
@@ -310,6 +347,19 @@ const DeviceDetails = ({ barcode, state }) => {
 		setDevice({ ...device, repairs: repairsArr });
 	};
 
+	const handleDescriptionChange = e => {
+		// Solo actúo si seleccionó algo válido
+		if (e.target.value!=='') {
+			const match = descriptionsList.filter(item => {
+				return item.description == e.target.value;
+			});
+
+			const { description, code, image, catalogue } = match[0];
+
+			setDevice({ ...device, description, code, image, catalogue });
+		}
+	};
+
 	const handleSubmit = () => {
 		if (unsavedChanges) {
 			setIsOpen(true);
@@ -318,7 +368,7 @@ const DeviceDetails = ({ barcode, state }) => {
 		}
 	};
 
-	// console.log(device.repairs);
+	// console.log(device);
 
 	return (
 		<>
@@ -349,9 +399,24 @@ const DeviceDetails = ({ barcode, state }) => {
 				</FormControl>
 
 				<FormControl id='description' mb={4}>
-					<FormLabel as='legend'>Descripción</FormLabel>
-					<Input name='description' value={device?.description || ``} onChange={handleInputChange} />
+					<FormLabel as='legend'>Equipo</FormLabel>
+
+					<Select variant='outline' name='description' value={device?.description || ``} onChange={handleDescriptionChange}>
+						<option value=''>Elija una descripción</option>
+						{descriptionsList.length > 0 &&
+							descriptionsList.map(listItem => (
+								<option key={listItem.id} value={listItem.description}>
+									{listItem.description}
+								</option>
+							))}
+					</Select>
 				</FormControl>
+
+				<FormControl id='catalogue' mb={4}>
+					<FormLabel as='legend'>Catálogo</FormLabel>
+					<Input name='catalogue' value={device?.catalogue || ``} isDisabled />
+				</FormControl>
+
 				<SimpleGrid columns={2} spacing={10}>
 					<FormControl id='serie' mb={4}>
 						<FormLabel as='legend'>N/S</FormLabel>
@@ -359,12 +424,19 @@ const DeviceDetails = ({ barcode, state }) => {
 					</FormControl>
 					<FormControl id='code' mb={4}>
 						<FormLabel as='legend'>Código</FormLabel>
-						<Input name='code' value={device?.code || ``} onChange={handleInputChange} />
+						<Input name='code' value={device?.code || ``} onChange={handleInputChange} isDisabled />
 					</FormControl>
 				</SimpleGrid>
 				<FormControl id='location' mb={4}>
 					<FormLabel as='legend'>Ubicación</FormLabel>
-					<Input name='location' value={device?.location || ``} onChange={handleInputChange} />
+
+					<Select variant='outline' name='location' value={device?.location || ``} onChange={handleInputChange}>
+						<option value=''>Elija una Ubicación</option>
+						{locations.length > 0 &&
+							locations.map(location => (
+								<option key={location.id} value={location.name}>{`(${location.cid}) ${location.name}`}</option>
+							))}
+					</Select>
 				</FormControl>
 
 				<FormControl id='brand' mb={4}>
