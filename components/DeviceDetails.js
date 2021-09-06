@@ -154,7 +154,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					serie: device.serie?.toUpperCase(),
 					brand: device.brand,
 					description: device.description,
-					location: device.location,
+					location: device.location|| 'CIME',
 					state: device.state || 'fix',
 					// image: device.image,
 					// catalogue: device.catalogue,
