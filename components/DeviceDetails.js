@@ -349,7 +349,7 @@ const DeviceDetails = ({ barcode, state }) => {
 
 	const handleDescriptionChange = e => {
 		// Solo actúo si seleccionó algo válido
-		if (e.target.value!=='') {
+		if (e.target.value !== '') {
 			const match = descriptionsList.filter(item => {
 				return item.description == e.target.value;
 			});
@@ -398,44 +398,50 @@ const DeviceDetails = ({ barcode, state }) => {
 					</Stack>
 				</FormControl>
 
-				<FormControl id='description' mb={4}>
-					<FormLabel as='legend'>Equipo</FormLabel>
+				<SimpleGrid columns={3} spacing={10}>
+					<FormControl id='description' mb={4}>
+						<FormLabel as='legend'>Equipo</FormLabel>
 
-					<Select variant='outline' name='description' value={device?.description || ``} onChange={handleDescriptionChange}>
-						<option value=''>Elija una descripción</option>
-						{descriptionsList.length > 0 &&
-							descriptionsList.map(listItem => (
-								<option key={listItem.id} value={listItem.description}>
-									{listItem.description}
-								</option>
-							))}
-					</Select>
-				</FormControl>
-
-				<FormControl id='catalogue' mb={4}>
-					<FormLabel as='legend'>Catálogo</FormLabel>
-					<Input name='catalogue' value={device?.catalogue || ``} isDisabled />
-				</FormControl>
-
-				<SimpleGrid columns={2} spacing={10}>
-					<FormControl id='serie' mb={4}>
-						<FormLabel as='legend'>N/S</FormLabel>
-						<Input name='serie' value={device?.serie || ``} onChange={handleInputChange} />
+						<Select variant='outline' name='description' value={device?.description || ``} onChange={handleDescriptionChange}>
+							<option value=''>Elija una descripción</option>
+							{descriptionsList.length > 0 &&
+								descriptionsList.map(listItem => {
+									if (listItem.active) {
+										return (
+											<option key={listItem.id} value={listItem.description}>
+												{listItem.description}
+											</option>
+										);
+									}
+								})}
+						</Select>
+					</FormControl>
+					<FormControl id='catalogue' mb={4}>
+						<FormLabel as='legend'>Catálogo Metrovias</FormLabel>
+						<Input name='catalogue' value={device?.catalogue || ``} isDisabled />
 					</FormControl>
 					<FormControl id='code' mb={4}>
-						<FormLabel as='legend'>Código</FormLabel>
-						<Input name='code' value={device?.code || ``} onChange={handleInputChange} isDisabled />
+						<FormLabel as='legend'>Código Fabricante</FormLabel>
+						<Input name='code' variant="filled" value={device?.code || ``} onChange={handleInputChange} isDisabled />
 					</FormControl>
 				</SimpleGrid>
+
+				<FormControl id='serie' mb={4}>
+					<FormLabel as='legend'>N/S</FormLabel>
+					<Input name='serie' value={device?.serie || ``} onChange={handleInputChange} />
+				</FormControl>
+
 				<FormControl id='location' mb={4}>
 					<FormLabel as='legend'>Ubicación</FormLabel>
 
 					<Select variant='outline' name='location' value={device?.location || ``} onChange={handleInputChange}>
 						<option value=''>Elija una Ubicación</option>
 						{locations.length > 0 &&
-							locations.map(location => (
-								<option key={location.id} value={location.name}>{`(${location.cid}) ${location.name}`}</option>
-							))}
+							locations.map(location => {
+								if (location.active) {
+									return <option key={location.id} value={location.name}>{`(${location.cid}) ${location.name}`}</option>;
+								}
+							})}
 					</Select>
 				</FormControl>
 
