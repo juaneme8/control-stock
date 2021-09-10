@@ -29,11 +29,12 @@ const DeviceDetails = ({ barcode, state }) => {
 
 	const [device, setDevice] = useState({});
 	const [descriptionsList, setDescriptionsList] = useState({});
-	const [descriptionDetails, setDescriptionDetails] = useState({});
 	const [locations, setLocations] = useState({});
+	const [fleets, setFleets] = useState({});
 	const [unsavedChanges, setUnsavedChanges] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
 	const [outdatedData, setOutdatedData] = useState(false);
+
 	const toast = useToast();
 
 	useEffect(() => {
@@ -87,6 +88,22 @@ const DeviceDetails = ({ barcode, state }) => {
 		fetchLocations();
 	}, []);
 
+	// Obtengo las flotas disponibles
+	useEffect(() => {
+		const fetchFleets = async () => {
+			try {
+				const res = await axios.get(`http://localhost:3001/api/fleets`);
+				// console.log('Status: ', res.status);
+
+				setFleets(res.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+
+		fetchFleets();
+	}, []);
+
 	// console.log('state', state)
 	// console.log('barcode', barcode)
 
@@ -101,8 +118,6 @@ const DeviceDetails = ({ barcode, state }) => {
 	};
 
 	const showToast = (toastTitle, toastStatus, redirect) => {
-
-
 		toast({
 			title: toastTitle,
 			// description: 'El equipo fue creado exitosamente',
@@ -295,11 +310,8 @@ const DeviceDetails = ({ barcode, state }) => {
 	};
 
 	const handleSubmit = () => {
-		if (unsavedChanges) {
-			setIsOpen(true);
-		} else {
-			handleSaveDevice();
-		}
+		if (unsavedChanges) setIsOpen(true);
+		else handleSaveDevice();
 	};
 
 	// console.log(device);
@@ -307,7 +319,7 @@ const DeviceDetails = ({ barcode, state }) => {
 	return (
 		<>
 			<SkipChangesDialog isOpen={isOpen} setIsOpen={setIsOpen} handleSkipChanges={handleSaveDevice} />
-			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}> 
 				<Heading>Datos Equipo</Heading>
 				<Divider orientation='horizontal' />
 				<HStack justify='space-between' mt={4}>
@@ -391,15 +403,12 @@ const DeviceDetails = ({ barcode, state }) => {
 					<FormLabel as='legend'>Flota</FormLabel>
 					<Select variant='outline' name='fleet' value={device?.fleet || ``} onChange={handleInputChange}>
 						<option value=''>Seleccione la flota</option>
-						<option value='Alstom 100'>Alstom 100</option>
-						<option value='Alstom 300'>Alstom 300</option>
-						<option value='CAF 6000'>CAF 6000</option>
-						<option value='CNR 105'>CNR 105</option>
-						<option value='CNR 45'>CNR 45</option>
-						<option value='FIAT'>FIAT</option>
-						<option value='Mitsubishi'>Mitsubishi</option>
-						<option value='Nagoya 5000'>Nagoya 5000</option>
-						<option value='Premetro'>Premetro</option>
+						{fleets.length > 0 &&
+							fleets.map(fleet => {
+								if (fleet.active) {
+									return <option key={fleet.id} value={fleet.name}>{fleet.name}</option>;
+								}
+							})}
 					</Select>
 				</FormControl>
 				<HStack justify='center' mt={4} spacing={5}>
@@ -411,7 +420,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					</IconButton>
 				</HStack>
 			</Box>
-			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4} >
 				{device.repairs?.length > 0 ? (
 					<>
 						<Heading>Reparaciones</Heading>
