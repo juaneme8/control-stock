@@ -3,7 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import DarkModeSwitch from '../components/DarkModeSwitch';
 import Logo from './Logo';
-
+import { FaSignOutAlt } from 'react-icons/fa';
 
 function Layout({ children }) {
   // const logoColor = useColorModeValue('#2C7A7B', '#8FD3CE');
@@ -16,6 +16,7 @@ function Layout({ children }) {
             <Link href="/">
               <IconButton borderRadius="50%" colorScheme="teal" icon={<Logo />} variant="outline" />
             </Link>
+            
 
             {/* <Link href="/list">
               <Button colorScheme="teal" variant="outline">
@@ -23,7 +24,13 @@ function Layout({ children }) {
               </Button>
             </Link> */}
           </HStack>
+          <HStack>
+          <Link href="/salida">
+              <IconButton borderRadius="50%" colorScheme="teal" icon={<FaSignOutAlt />} variant="outline" />
+            </Link>
           <DarkModeSwitch />
+            </HStack>
+          
         </Flex>
         {children}
       </Container>
