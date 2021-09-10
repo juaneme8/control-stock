@@ -1,16 +1,17 @@
 import { Text } from '@chakra-ui/layout';
-import { Box, Circle, Flex } from '@chakra-ui/react';
+import { Box, Circle, Flex,useColorMode } from '@chakra-ui/react';
 import { getLineColor,getStateColor } from '../utils/helpers';
+
 
 const Device = ({ device }) => {
   const { barcode, description, code, serie, fleet, location, state, image, catalogue } = device;
-  
-  console.log(fleet)
+  const { colorMode } = useColorMode()
+
   return (
-    <Box color="gray.600">
+    <Box color={colorMode === 'light' ? "gray.600":"white"} >
       <Flex align="center">
       <Circle size="10px" bg={getStateColor(state)} color="white"></Circle> 
-        <Text bg="gray.200" borderRadius="md" px={1} fontSize="sm" align="center" flex="1" ml={2}>{barcode}</Text>
+        <Text bg={colorMode === 'light' ? "gray.200":"gray.700"} borderRadius="md" px={1} fontSize="sm" align="center" flex="1" ml={2}>{barcode}</Text>
       </Flex>
 
       <Text casing="uppercase" fontWeight="bold" noOfLines={1}>
