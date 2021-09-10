@@ -82,11 +82,10 @@ export default function Home() {
         {showingDevices.map(device => (
           device.active && 
 					<GridItem key={device.id} as={Link} href={`/details/${device.barcode}`}>
-						<Box
-							bg='gray.50'
-							border='1px'
-							// borderColor={getStateColor(device.state)}
-							borderColor='gray.400'
+				<Box
+				bgGradient="linear-gradient(
+					90deg, rgba(114, 176, 218, 0.125) 0%, rgba(114, 176, 218, 0.02) 100%)"
+				
 							cursor='pointer'
 							p={4}
 							rounded='lg'
