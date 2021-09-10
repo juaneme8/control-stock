@@ -9,8 +9,10 @@ const DarkModeSwitch = () => {
   return (
     <IconButton
       aria-label="Toggle Dark Switch"
+      borderRadius="50%" colorScheme="teal"
       icon={colorMode === 'dark' ? <BiSun /> : <BiMoon />}
       onClick={toggleColorMode}
+      variant="outline"
     />
   );
 };
