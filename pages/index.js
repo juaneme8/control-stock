@@ -60,7 +60,7 @@ export default function Home() {
 	return (
 		<>
 			<Head>
-				<title>Stock - CIME</title>
+				<title>SGS - Inicio</title>
 				<link href='/favicon.ico' rel='icon' />
 			</Head>
 			<Heading as='h2' size='lg'>
