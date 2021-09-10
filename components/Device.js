@@ -3,7 +3,9 @@ import { Box, Circle, Flex } from '@chakra-ui/react';
 import { getLineColor,getStateColor } from '../utils/helpers';
 
 const Device = ({ device }) => {
-  const { barcode, description, code, serie, brand, location, state, image, catalogue } = device;
+  const { barcode, description, code, serie, fleet, location, state, image, catalogue } = device;
+  
+  console.log(fleet)
   return (
     <Box color="gray.600">
       <Flex align="center">
@@ -19,7 +21,7 @@ const Device = ({ device }) => {
         {location}
       </Text>
      
-      <Text mt={2}>{brand}</Text>
+      <Text mt={2}>{fleet}</Text>
       <Text>{code}</Text>
       <Text>{serie}</Text>
       

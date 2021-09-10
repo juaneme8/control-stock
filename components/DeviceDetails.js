@@ -141,7 +141,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					barcode,
 					code: device.code?.toUpperCase(),
 					serie: device.serie?.toUpperCase(),
-					brand: device.brand,
+					fleet: device.fleet,
 					description: device.description,
 					location: device.location|| 'CIME',
 					state: device.state || 'fix',
@@ -158,7 +158,7 @@ const DeviceDetails = ({ barcode, state }) => {
 			const res = await axios.put(`http://localhost:3001/api/devices/${barcode}`, {
 				code: device.code?.toUpperCase(),
 				serie: device.serie?.toUpperCase(),
-				brand: device.brand,
+				fleet: device.fleet,
 				description: device.description,
 				location: device.location,
 				state: device.state,
@@ -507,9 +507,9 @@ const DeviceDetails = ({ barcode, state }) => {
 					</Select>
 				</FormControl>
 
-				<FormControl id='brand' mb={4}>
+				<FormControl id='fleet' mb={4}>
 					<FormLabel as='legend'>Flota</FormLabel>
-					<Select variant='outline' name='brand' value={device?.brand || ``} onChange={handleInputChange} >
+					<Select variant='outline' name='fleet' value={device?.fleet || ``} onChange={handleInputChange} >
 							<option value=''>Seleccione la flota</option>
 							<option value='Alstom 100'>Alstom 100</option>
 							<option value='Alstom 300'>Alstom 300</option>
@@ -545,7 +545,7 @@ const DeviceDetails = ({ barcode, state }) => {
 										<SimpleGrid columns={4} spacing={10}>
 											{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
 									<FormLabel as='legend'>Fecha de Entrada</FormLabel>
-									<Input name='brand' value={repair.entryDate} />
+									<Input name='fleet' value={repair.entryDate} />
 								</FormControl> */}
 											<Box>
 												<Text fontWeight='semibold' align='center'>
