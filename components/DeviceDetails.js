@@ -1,12 +1,20 @@
 import {
 	Badge,
-	Box, Circle, Divider, FormControl,
-	FormLabel, Heading, HStack,
+	Box,
+	Circle,
+	Divider,
+	FormControl,
+	FormLabel,
+	Heading,
+	HStack,
 	IconButton,
 	Input,
 	Select,
 	SimpleGrid,
-	Stack, Text, Tooltip, useToast
+	Stack,
+	Text,
+	Tooltip,
+	useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { format } from 'date-fns';
@@ -15,9 +23,6 @@ import React, { useEffect, useState } from 'react';
 import { FaAngleLeft, FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 import { getStateColor } from '../utils/helpers';
 import SkipChangesDialog from './SkipChangesDialog';
-
-
-
 
 const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
@@ -95,34 +100,26 @@ const DeviceDetails = ({ barcode, state }) => {
 		setDevice({ ...device, state: e.target.value });
 	};
 
+	const showToast = (toastTitle, toastStatus, redirect) => {
+
+
+		toast({
+			title: toastTitle,
+			// description: 'El equipo fue creado exitosamente',
+			status: toastStatus,
+			duration: 1000,
+			isClosable: true,
+			position: 'bottom-left',
+			onCloseComplete: redirect ? () => router.push('/') : null,
+		});
+	};
+
 	const handleDeleteDevice = () => {
 		const deleteDevice = async () => {
 			const res = await axios.delete(`http://localhost:3001/api/devices/${barcode}`);
-			// console.log(res);
 
-			// Si la actualización fue exitosa
-			if (res.status === 201) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Equipo eliminado correctamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'warning',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-					onCloseComplete: () => router.push('/'),
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+			if (res.status === 201) showToast('Equipo eliminado correctamente', 'warning', true);
+			else showToast('Ocurrió un error', 'error', false);
 		};
 
 		deleteDevice();
@@ -143,7 +140,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					serie: device.serie?.toUpperCase(),
 					fleet: device.fleet,
 					description: device.description,
-					location: device.location|| 'CIME',
+					location: device.location || 'CIME',
 					state: device.state || 'fix',
 					// image: device.image,
 					// catalogue: device.catalogue,
@@ -166,29 +163,8 @@ const DeviceDetails = ({ barcode, state }) => {
 				// catalogue: device.catalogue,
 			});
 
-			// Si la actualización fue exitosa
-			if (res.status === 201) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Equipo actualizado exitosamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'success',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-					onCloseComplete: () => router.push('/'),
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+			if (res.status === 201) showToast('Equipo actualizado exitosamente', 'success', true);
+			else showToast('Ocurrió un error', 'error', false);
 		};
 
 		saveDevice();
@@ -207,28 +183,8 @@ const DeviceDetails = ({ barcode, state }) => {
 
 			setDevice({ ...device, repairs: repairsArr });
 
-			// Si la actualización fue exitosa
-			if (res.status === 200) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Reparación creada correctamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'success',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+			if (res.status === 201) showToast('Reparación creada correctamente', 'success', false);
+			else showToast('Ocurrió un error', 'error', false);
 		};
 
 		// Actualizo el estado del equipo poniendolo en amarillo.
@@ -237,37 +193,14 @@ const DeviceDetails = ({ barcode, state }) => {
 				state: 'fix',
 			});
 
-			// Si la actualización fue exitosa
-			if (res.status === 201) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Equipo actualizado exitosamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'success',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-					// onCloseComplete: () => router.push('/'),
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+			if (res.status === 201) showToast('Equipo actualizado exitosamente', 'success', false);
+			else showToast('Ocurrió un error', 'error', false);
 		};
-
 
 		// console.log(deviceId);
 		postRepair(deviceId);
 
 		updateState();
-
 	};
 
 	const handleDeleteRepair = repairId => {
@@ -283,27 +216,9 @@ const DeviceDetails = ({ barcode, state }) => {
 			setDevice({ ...device, repairs: repairsArr });
 
 			// Si el borrado fue exitoso
-			if (res.status === 204) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Reparación eliminada correctamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'warning',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+
+			if (res.status === 201) showToast('Reparación eliminada correctamente', 'warning', false);
+			else showToast('Ocurrió un error', 'error', false);
 		};
 
 		deleteRepair();
@@ -329,28 +244,8 @@ const DeviceDetails = ({ barcode, state }) => {
 
 			// console.log(res);
 
-			// Si la actualización fue exitosa
-			if (res.status === 200) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Reparación actualizada exitosamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'success',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+			if (res.status === 200) showToast('Reparación actualizada correctamente', 'success', false);
+			else showToast('Ocurrió un error', 'error', false);
 		};
 
 		// Actualizo el estado del equipo poniendolo en verde.
@@ -359,29 +254,8 @@ const DeviceDetails = ({ barcode, state }) => {
 				state: 'approved',
 			});
 
-			// Si la actualización fue exitosa
-			if (res.status === 201) {
-				// mostrar mensaje de exito
-				toast({
-					title: 'Equipo actualizado exitosamente',
-					// description: 'El equipo fue creado exitosamente',
-					status: 'success',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-					// onCloseComplete: () => router.push('/'),
-				});
-			} else {
-				// mostrar mensaje de error
-				toast({
-					title: 'Ocurrió un error',
-					// description: 'Ocurrió un error al crear el equipo',
-					status: 'error',
-					duration: 1000,
-					isClosable: true,
-					position: 'bottom-left',
-				});
-			}
+			if (res.status === 201) showToast('Equipo actualizado exitosamente', 'success', false);
+			else showToast('Ocurrió un error', 'error', false);
 		};
 
 		updateState();
@@ -452,7 +326,13 @@ const DeviceDetails = ({ barcode, state }) => {
 					<FormLabel as='legend'>Estado</FormLabel>
 
 					<Stack spacing={3}>
-						<Select bg={getStateColor(device.state|| `fix`)} variant='outline' value={device?.state || `fix`} onChange={handleSelectChange} isDisabled>
+						<Select
+							bg={getStateColor(device.state || `fix`)}
+							variant='outline'
+							value={device?.state || `fix`}
+							onChange={handleSelectChange}
+							isDisabled
+						>
 							<option value='approved'>Aprobado</option>
 							<option value='fix'>Para Intervenir</option>
 							<option value='rejected'>Rechazado</option>
@@ -509,19 +389,18 @@ const DeviceDetails = ({ barcode, state }) => {
 
 				<FormControl id='fleet' mb={4}>
 					<FormLabel as='legend'>Flota</FormLabel>
-					<Select variant='outline' name='fleet' value={device?.fleet || ``} onChange={handleInputChange} >
-							<option value=''>Seleccione la flota</option>
-							<option value='Alstom 100'>Alstom 100</option>
-							<option value='Alstom 300'>Alstom 300</option>
-							<option value='CAF 6000'>CAF 6000</option>
-							<option value='CNR 105'>CNR 105</option>
-							<option value='CNR 45'>CNR 45</option>
-							<option value='FIAT'>FIAT</option>
-							<option value='Mitsubishi'>Mitsubishi</option>
-							<option value='Nagoya 5000'>Nagoya 5000</option>
-							<option value='Premetro'>Premetro</option>
+					<Select variant='outline' name='fleet' value={device?.fleet || ``} onChange={handleInputChange}>
+						<option value=''>Seleccione la flota</option>
+						<option value='Alstom 100'>Alstom 100</option>
+						<option value='Alstom 300'>Alstom 300</option>
+						<option value='CAF 6000'>CAF 6000</option>
+						<option value='CNR 105'>CNR 105</option>
+						<option value='CNR 45'>CNR 45</option>
+						<option value='FIAT'>FIAT</option>
+						<option value='Mitsubishi'>Mitsubishi</option>
+						<option value='Nagoya 5000'>Nagoya 5000</option>
+						<option value='Premetro'>Premetro</option>
 					</Select>
-
 				</FormControl>
 				<HStack justify='center' mt={4} spacing={5}>
 					<IconButton colorScheme='teal' variant='outline' onClick={handleCancel}>
@@ -532,7 +411,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					</IconButton>
 				</HStack>
 			</Box>
-			<Box  border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 				{device.repairs?.length > 0 ? (
 					<>
 						<Heading>Reparaciones</Heading>
