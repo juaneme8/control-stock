@@ -319,7 +319,7 @@ const DeviceDetails = ({ barcode, state }) => {
 	return (
 		<>
 			<SkipChangesDialog isOpen={isOpen} setIsOpen={setIsOpen} handleSkipChanges={handleSaveDevice} />
-			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}> 
+			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 				<Heading>Datos Equipo</Heading>
 				<Divider orientation='horizontal' />
 				<HStack justify='space-between' mt={4}>
@@ -406,7 +406,11 @@ const DeviceDetails = ({ barcode, state }) => {
 						{fleets.length > 0 &&
 							fleets.map(fleet => {
 								if (fleet.active) {
-									return <option key={fleet.id} value={fleet.name}>{fleet.name}</option>;
+									return (
+										<option key={fleet.id} value={fleet.name}>
+											{fleet.name}
+										</option>
+									);
 								}
 							})}
 					</Select>
@@ -420,65 +424,65 @@ const DeviceDetails = ({ barcode, state }) => {
 					</IconButton>
 				</HStack>
 			</Box>
-			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4} >
-				{device.repairs?.length > 0 ? (
-					<>
-						<Heading>Reparaciones</Heading>
-						<Divider orientation='horizontal' />
 
-						{device.repairs.map(
-							repair =>
-								repair.active && (
-									<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
-										<SimpleGrid columns={4} spacing={10}>
-											{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
+			{device.repairs?.length > 0 ? (
+				<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+					<Heading>Reparaciones</Heading>
+					<Divider orientation='horizontal' />
+
+					{device.repairs.map(
+						repair =>
+							repair.active && (
+								<Box key={repair.id} p={4} mt={4} borderRadius='lg' borderWidth='1px' borderColor='teal.600'>
+									<SimpleGrid columns={4} spacing={10}>
+										{/* <FormControl id={`entryDate${repair.id}`} mb={4}>
 									<FormLabel as='legend'>Fecha de Entrada</FormLabel>
 									<Input name='fleet' value={repair.entryDate} />
 								</FormControl> */}
-											<Box>
-												<Text fontWeight='semibold' align='center'>
-													Fecha Entrada
-												</Text>
-												{repair.entryDate ? (
-													<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
-												) : (
-													<Text align='center'>-</Text>
-												)}
-											</Box>
-											<Box>
-												<Text fontWeight='semibold' align='center'>
-													Fecha Reparación
-												</Text>
-												{repair.repairDate ? (
-													<Text align='center'>{format(new Date(repair.repairDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
-												) : (
-													<Text align='center'>-</Text>
-												)}
-											</Box>
-											<Box>
-												<Text fontWeight='semibold' align='center'>
-													Fecha Salida
-												</Text>
-												{repair.exitDate ? (
-													<Text align='center'>{format(new Date(repair.exitDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
-												) : (
-													<Text align='center'>-</Text>
-												)}
-											</Box>
-											<HStack justify='flex-end'>
-												{unsavedChanges && !repair.exitDate ? (
-													<IconButton
-														variant='outline'
-														aria-label='Actualizar Reparación'
-														icon={<FaSave />}
-														onClick={() => handleUpdateRepair(repair.id)}
-														colorScheme='teal'
-													/>
-												) : null}
+										<Box>
+											<Text fontWeight='semibold' align='center'>
+												Fecha Entrada
+											</Text>
+											{repair.entryDate ? (
+												<Text align='center'>{format(new Date(repair.entryDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
+											) : (
+												<Text align='center'>-</Text>
+											)}
+										</Box>
+										<Box>
+											<Text fontWeight='semibold' align='center'>
+												Fecha Reparación
+											</Text>
+											{repair.repairDate ? (
+												<Text align='center'>{format(new Date(repair.repairDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
+											) : (
+												<Text align='center'>-</Text>
+											)}
+										</Box>
+										<Box>
+											<Text fontWeight='semibold' align='center'>
+												Fecha Salida
+											</Text>
+											{repair.exitDate ? (
+												<Text align='center'>{format(new Date(repair.exitDate), 'dd/MM/yy HH:mm:ss')}hs</Text>
+											) : (
+												<Text align='center'>-</Text>
+											)}
+										</Box>
+										<HStack justify='flex-end'>
+											{unsavedChanges && !repair.exitDate ? (
+												<IconButton
+													variant='outline'
+													aria-label='Actualizar Reparación'
+													icon={<FaSave />}
+													onClick={() => handleUpdateRepair(repair.id)}
+													colorScheme='teal'
+												/>
+											) : null}
 
-												{/* Si en un futuro doy la posibilidad de borrar, no podré usar 
+											{/* Si en un futuro doy la posibilidad de borrar, no podré usar 
 												[device.repairs.length - 1].exitDate*/}
-												{/* <Tooltip label='Eliminar Reparación' placement='right-start'>
+											{/* <Tooltip label='Eliminar Reparación' placement='right-start'>
 													<IconButton
 														variant='outline'
 														aria-label='Eliminar Reparación'
@@ -487,32 +491,31 @@ const DeviceDetails = ({ barcode, state }) => {
 														colorScheme='red'
 													/>
 												</Tooltip> */}
-											</HStack>
-										</SimpleGrid>
+										</HStack>
+									</SimpleGrid>
 
-										<FormControl id={`description${repair.id}`} mt={4}>
-											<FormLabel as='legend'>Descripción:</FormLabel>
-											<Input
-												name={`description${repair.id}`}
-												value={repair.description || ``}
-												onChange={e => handleRepairChange(e, repair.id)}
-												isReadOnly={repair.exitDate}
-												isDisabled={repair.exitDate}
-											/>
-										</FormControl>
-									</Box>
-								)
-						)}
-						{device.repairs[device.repairs.length - 1].exitDate ? (
-							<Tooltip label='Crear nuevo ingreso al Laboratorio' placement='right-start'>
-								<IconButton variant='outline' colorScheme='teal' onClick={() => handleNewRepair(device.id)} mt={4}>
-									<FaPlus />
-								</IconButton>
-							</Tooltip>
-						) : null}
-					</>
-				) : null}
-			</Box>
+									<FormControl id={`description${repair.id}`} mt={4}>
+										<FormLabel as='legend'>Descripción:</FormLabel>
+										<Input
+											name={`description${repair.id}`}
+											value={repair.description || ``}
+											onChange={e => handleRepairChange(e, repair.id)}
+											isReadOnly={repair.exitDate}
+											isDisabled={repair.exitDate}
+										/>
+									</FormControl>
+								</Box>
+							)
+					)}
+					{device.repairs[device.repairs.length - 1].exitDate ? (
+						<Tooltip label='Crear nuevo ingreso al Laboratorio' placement='right-start'>
+							<IconButton variant='outline' colorScheme='teal' onClick={() => handleNewRepair(device.id)} mt={4}>
+								<FaPlus />
+							</IconButton>
+						</Tooltip>
+					) : null}
+				</Box>
+			) : null}
 		</>
 	);
 };
