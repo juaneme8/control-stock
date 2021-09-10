@@ -525,8 +525,13 @@ const DeviceDetails = ({ barcode, state }) => {
 							<option value=''>Seleccione la flota</option>
 							<option value='Alstom 100'>Alstom 100</option>
 							<option value='Alstom 300'>Alstom 300</option>
-							<option value='CNR'>CNR</option>
+							<option value='CAF 6000'>CAF 6000</option>
+							<option value='CNR 105'>CNR 105</option>
+							<option value='CNR 45'>CNR 45</option>
+							<option value='FIAT'>FIAT</option>
 							<option value='Mitsubishi'>Mitsubishi</option>
+							<option value='Nagoya 5000'>Nagoya 5000</option>
+							<option value='Premetro'>Premetro</option>
 					</Select>
 
 				</FormControl>
