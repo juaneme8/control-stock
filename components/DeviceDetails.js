@@ -1,34 +1,23 @@
 import {
 	Badge,
-	Box,
-	Button,
-	Circle,
-	Flex,
-	FormControl,
-	FormLabel,
-	HStack,
+	Box, Circle, Divider, FormControl,
+	FormLabel, Heading, HStack,
 	IconButton,
 	Input,
 	Select,
 	SimpleGrid,
-	Stack,
-	useToast,
-	Text,
-	Center,
-	Heading,
-	Divider,
-	Tooltip,
+	Stack, Text, Tooltip, useToast
 } from '@chakra-ui/react';
 import axios from 'axios';
+import { format } from 'date-fns';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
+import { FaAngleLeft, FaPlus, FaSave, FaTrash } from 'react-icons/fa';
 import { getStateColor } from '../utils/helpers';
-
-import { FaTrash, FaSave, FaPlus, FaAngleLeft } from 'react-icons/fa';
-
-import { format } from 'date-fns';
-
 import SkipChangesDialog from './SkipChangesDialog';
+
+
+
 
 const DeviceDetails = ({ barcode, state }) => {
 	const router = useRouter();
@@ -396,7 +385,6 @@ const DeviceDetails = ({ barcode, state }) => {
 		};
 
 		updateState();
-
 		updateRepair();
 	};
 
@@ -445,7 +433,7 @@ const DeviceDetails = ({ barcode, state }) => {
 	return (
 		<>
 			<SkipChangesDialog isOpen={isOpen} setIsOpen={setIsOpen} handleSkipChanges={handleSaveDevice} />
-			<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+			<Box border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 				<Heading>Datos Equipo</Heading>
 				<Divider orientation='horizontal' />
 				<HStack justify='space-between' mt={4}>
@@ -544,7 +532,7 @@ const DeviceDetails = ({ barcode, state }) => {
 					</IconButton>
 				</HStack>
 			</Box>
-			<Box bg='gray.50' border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
+			<Box  border='1px' borderColor='gray.300' borderRadius='md' mt={8} p={4}>
 				{device.repairs?.length > 0 ? (
 					<>
 						<Heading>Reparaciones</Heading>
