@@ -7,14 +7,13 @@ import axios from 'axios';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 
-
 function salida() {
-    const [locations, setLocations] = useState({});
-    const [destination, setDestination] = useState("")
-    const [inputValue, setInputValue] = useState("")
-    const [exitList, setExitList] = useState([])
-    const toast = useToast();
-    // Obtengo las localizaciones
+	const [locations, setLocations] = useState({});
+	const [destination, setDestination] = useState('');
+	const [inputValue, setInputValue] = useState('');
+	const [exitList, setExitList] = useState([]);
+	const toast = useToast();
+	// Obtengo las localizaciones
 	useEffect(() => {
 		const fetchLocations = async () => {
 			try {
@@ -28,14 +27,14 @@ function salida() {
 		};
 
 		fetchLocations();
-    }, []);
+	}, []);
 
-    const handleDestinationChange = e => {
-        // console.log(e.target.value)
-		setDestination(e.target.value );
-    };
+	const handleDestinationChange = e => {
+		// console.log(e.target.value)
+		setDestination(e.target.value);
+	};
 
-    const showToast = (toastTitle, toastStatus, redirect) => {
+	const showToast = (toastTitle, toastStatus, redirect) => {
 		toast({
 			title: toastTitle,
 			// description: 'El equipo fue creado exitosamente',
@@ -46,35 +45,36 @@ function salida() {
 			onCloseComplete: redirect ? () => router.push('/') : null,
 		});
 	};
-    
-    const handleInputChange = e => {
-        // console.log(e.target.value)
-        setInputValue(e.target.value)
-        if (e.target.value.length === 6) {
-            console.log('barcode completo')
-            setInputValue("")
 
-            const fetchDevice = async () => {
-                const res = await axios.get(`http://localhost:3001/api/devices/${e.target.value}`);
-    
-                console.log(res.data)
+	const handleInputChange = e => {
 
-                if (res.status === 200) {
+		// console.log(e.target.value)
+		setInputValue(e.target.value);
 
-                    setExitList([...exitList, res.data])
-                    
-                    showToast('Equipo cargado a la lista de salida', 'success', false);
-                }
-                    
-                else showToast('Ocurrió un error', 'error', false);
-            };
-    
-            fetchDevice();
+		if (e.target.value.length === 6) {
+			setInputValue('');
 
 
-        }
-    }
-    
+			console.log(exitList)
+
+			// Chequeo si el equipo ingresado no forma parte de exitList
+			// exitList.find(item => item.barcode === e.ta)
+
+			const fetchDevice = async () => {
+				const res = await axios.get(`http://localhost:3001/api/devices/${e.target.value}`);
+
+				// console.log(res.data);
+
+				if (res.status === 200) {
+					setExitList([...exitList, res.data]);
+
+					showToast('Equipo cargado a la lista de salida', 'success', false);
+				} else showToast('Ocurrió un error', 'error', false);
+			};
+
+			fetchDevice();
+		}
+	};
 
 	return (
 		<>
@@ -95,26 +95,25 @@ function salida() {
 				onChange={handleInputChange}
 			/>
 
-            <Grid gap={4} mt='6' templateColumns='repeat(auto-fill, minmax(200px,1fr))'>
-                {exitList.length ?
-                    exitList.map(item => (
-                        <Box
-                            key={item.id}
-                        bgGradient='linear-gradient(
-                        90deg, rgba(114, 176, 218, 0.125) 0%, rgba(114, 176, 218, 0.02) 100%)'
-                        cursor='pointer'
-                        p={4}
-                        rounded='lg'
-                    >
-                        {item.description}
-                    </Box>
-                )):null    
-            }
-				
-                <FormControl id='location' mb={4}>
+			{exitList.length ? (
+				<Box>
+					{exitList.map(item => (
+						<Box
+							mt={4}
+							key={item.id}
+							bgGradient='linear-gradient(
+					 90deg, rgba(114, 176, 218, 0.125) 0%, rgba(114, 176, 218, 0.02) 100%)'
+							cursor='pointer'
+							p={4}
+							rounded='lg'
+						>
+							{item.description} - S/N: {item.serie} ({item.barcode})
+						</Box>
+					))}
+
 					<FormLabel as='legend'>Destino</FormLabel>
 
-					<Select variant='outline' name='location' value={destination} onChange={handleDestinationChange} >
+					<Select variant='outline' name='location' value={destination} onChange={handleDestinationChange}>
 						<option value=''>Elija el Destino</option>
 						{locations.length > 0 &&
 							locations.map(location => {
@@ -123,8 +122,8 @@ function salida() {
 								}
 							})}
 					</Select>
-				</FormControl>
-			</Grid>
+				</Box>
+			) : null}
 		</>
 	);
 }
